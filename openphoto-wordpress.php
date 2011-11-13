@@ -61,7 +61,7 @@ class WP_OpenPhoto {
 		
 		if ($photos)
 		{
-			echo '<form id="gallery-form">';
+			echo '<form enctype="multipart/form-data" method="post" action="http://2011.handcraftedwp.com/wp-admin/media-upload.php?type=image&amp;tab=library&amp;post_id=38" class="media-upload-form validate" id="library-form">';
 			echo '<div id="media-items">';
 		
 			foreach($photos as $photo)
@@ -80,7 +80,7 @@ class WP_OpenPhoto {
 					substr(strrchr($photo->pathOriginal, "/"), 1 );
 				}
 				echo '</span></div>';
-				echo '<table class="slidetoggle describe startclosed" style="display: table; ">';
+				echo '<table class="slidetoggle describe startclosed" style="display:table;">';
 					echo '<thead class="media-item-info" id="media-head-'.$uniquie_id.'">';
 						echo '<tr valign="top">';
 							echo '<td class="A1B1" id="thumbnail-head-'.$uniquie_id.'">';
@@ -117,10 +117,10 @@ class WP_OpenPhoto {
 						echo '<tr class="url">';
 							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$uniquie_id.'][url]"><span class="alignleft">Link URL</span><br class="clear"></label></th>';
 							echo '<td class="field">';
-								echo '<input type="text" class="text urlfield" name="attachments['.$uniquie_id.'][url]" value="'.$photo->host.'/'.$photo->pathOriginal.'"><br>';
+								echo '<input type="text" class="text urlfield" name="attachments['.$uniquie_id.'][url]" value="http://'.$photo->host.$photo->pathOriginal.'"><br>';
 								echo '<button type="button" class="button urlnone" title="">None</button>';
-								echo '<button type="button" class="button urlfile" title="'.$photo->host.'/'.$photo->pathOriginal.'">File URL</button>';
-								echo '<button type="button" class="button urlpost" title="http://2011.handcraftedwp.com/?attachment_id='.$uniquie_id.'">Post URL</button>';
+								echo '<button type="button" class="button urlfile" title="http://'.$photo->host.$photo->pathOriginal.'">File URL</button>';
+								//echo '<button type="button" class="button urlpost" title="http://2011.handcraftedwp.com/?attachment_id='.$uniquie_id.'">Post URL</button>';
 								echo '<p class="help">Enter a link URL or click above for presets.</p>';
 							echo '</td>';
 						echo '</tr>';
