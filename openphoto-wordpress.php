@@ -58,17 +58,29 @@ class WP_OpenPhoto {
 
 		$response = json_decode($response);
 		$photos = $response->result;
+		$post_id = $_GET["post_id"];
 		
 		if ($photos)
 		{
-			echo '<form enctype="multipart/form-data" method="post" action="http://2011.handcraftedwp.com/wp-admin/media-upload.php?type=image&amp;tab=library&amp;post_id=38" class="media-upload-form validate" id="library-form">';
+			echo '<form enctype="multipart/form-data" method="post" action="'.home_url().'/wp-admin/media-upload.php?type=image&amp;tab=library&amp;post_id='.$post_id.'" class="media-upload-form validate" id="library-form">';
+			echo '<script type="text/javascript">
+			<!--
+			jQuery(function($){
+				var preloaded = $(".media-item.preloaded");
+				if ( preloaded.length > 0 ) {
+					preloaded.each(function(){prepareMediaItem({id:this.id.replace(/[^0-9]/g, "")},"");});
+					updateMediaForm();
+				}
+			});
+			-->
+			</script>';
 			echo '<div id="media-items">';
 		
 			foreach($photos as $photo)
 			{
 				$uniquie_id = $photo->dateTaken;
 				
-				echo '<div id="media-item-'.$uniquie_id.'" class="media-item child-of-38 preloaded"><img class="pinkynail toggle" src="'.$photo->path128x128.'" alt="" style="margin-top: 3px"><div class="progress" style="display: none; "></div><div id="media-upload-error-'.$uniquie_id.'"></div><div class="filename"></div>';
+				echo '<div id="media-item-'.$uniquie_id.'" class="media-item child-of-'.$post_id.' preloaded"><div class="progress" style="display: none; "></div><div id="media-upload-error-'.$uniquie_id.'"></div><div class="filename"></div>';
 				echo '<input type="hidden" id="type-of-'.$uniquie_id.'" value="image">';
 				echo '<a class="toggle describe-toggle-on" href="#">Show</a>';
 				echo '<a class="toggle describe-toggle-off" href="#">Hide</a>';
@@ -80,7 +92,7 @@ class WP_OpenPhoto {
 					substr(strrchr($photo->pathOriginal, "/"), 1 );
 				}
 				echo '</span></div>';
-				echo '<table class="slidetoggle describe startclosed" style="display:table;">';
+				echo '<table class="slidetoggle describe startclosed">';
 					echo '<thead class="media-item-info" id="media-head-'.$uniquie_id.'">';
 						echo '<tr valign="top">';
 							echo '<td class="A1B1" id="thumbnail-head-'.$uniquie_id.'">';
@@ -162,6 +174,12 @@ class WP_OpenPhoto {
 			}
 			
 			echo '</div>';
+			
+			echo '<p class="ml-submit">';
+				echo '<input type="submit" name="save" id="save" class="button savebutton" value="Save all changes">';
+				echo '<input type="hidden" name="post_id" id="post_id" value="'.$post_id.'">';
+			echo '</p>';
+			
 			echo '</form>';
 			
 		}	
