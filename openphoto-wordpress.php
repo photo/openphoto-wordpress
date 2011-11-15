@@ -63,6 +63,7 @@ class WP_OpenPhoto {
 		if ($photos)
 		{
 			echo '<form enctype="multipart/form-data" method="post" action="'.home_url().'/wp-admin/media-upload.php?type=image&amp;tab=library&amp;post_id='.$post_id.'" class="media-upload-form validate" id="library-form">';
+			echo '<input type="hidden" id="_wpnonce" name="_wpnonce" value="5acb57476d" /><input type="hidden" name="_wp_http_referer" value="/wp-admin/media-upload.php?post_id='.$post_id.'&amp;type=image&amp;tab=library" />';
 			echo '<script type="text/javascript">
 			<!--
 			jQuery(function($){
@@ -97,7 +98,7 @@ class WP_OpenPhoto {
 						echo '<tr valign="top">';
 							echo '<td class="A1B1" id="thumbnail-head-'.$uniquie_id.'">';
 								echo '<p style="height:100px;padding-right:10px;"><a href="'.$post->path128x128.'" target="_blank"><img class="thumbnail" src="'.$photo->path128x128.'" alt="" style="margin-top: 3px;"></a></p>';
-								echo '<p><input type="button" id="imgedit-open-btn-'.$uniquie_id.'" onclick="imageEdit.open( '.$uniquie_id.', &quot;98f2ea4727&quot; )" class="button" value="Edit Image"> <img src="'.home_url().'/wp-admin/images/wpspin_light.gif" class="imgedit-wait-spin" alt=""></p>';
+								//echo '<p><input type="button" id="imgedit-open-btn-'.$uniquie_id.'" onclick="imageEdit.open( '.$uniquie_id.', &quot;98f2ea4727&quot; )" class="button" value="Edit Image"> <img src="'.home_url().'/wp-admin/images/wpspin_light.gif" class="imgedit-wait-spin" alt=""></p>';
 							echo '</td>';
 							echo '<td>';
 								echo '<p><strong>File name:</strong> '.substr(strrchr($photo->pathOriginal, "/"), 1 ).'</p>';
@@ -151,16 +152,17 @@ class WP_OpenPhoto {
 								echo '<div class="image-size-item"><input type="radio" name="attachments['.$uniquie_id.'][image-size]" id="image-size-thumbnail-'.$uniquie_id.'" value="thumbnail"><label for="image-size-thumbnail-'.$uniquie_id.'">Thumbnail</label> <label for="image-size-thumbnail-'.$uniquie_id.'" class="help">(150&nbsp;×&nbsp;150)</label></div>';
 								echo '<div class="image-size-item"><input type="radio" name="attachments['.$uniquie_id.'][image-size]" id="image-size-medium-'.$uniquie_id.'" value="medium" checked="checked"><label for="image-size-medium-'.$uniquie_id.'">Medium</label> <label for="image-size-medium-'.$uniquie_id.'" class="help">(300&nbsp;×&nbsp;187)</label></div>';
 								echo '<div class="image-size-item"><input type="radio" name="attachments['.$uniquie_id.'][image-size]" id="image-size-large-'.$uniquie_id.'" value="large"><label for="image-size-large-'.$uniquie_id.'">Large</label> <label for="image-size-large-'.$uniquie_id.'" class="help">(584&nbsp;×&nbsp;365)</label></div>';
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$uniquie_id.'][image-size]" id="image-size-full-'.$uniquie_id.'" value="full"><label for="image-size-full-'.$uniquie_id.'">Full Size</label> <label for="image-size-full-'.$uniquie_id.'" class="help">(1920&nbsp;×&nbsp;1200)</label></div>';
+								echo '<div class="image-size-item"><input type="radio" name="attachments['.$uniquie_id.'][image-size]" id="image-size-full-'.$uniquie_id.'" value="full"><label for="image-size-full-'.$uniquie_id.'">Full Size</label> <label for="image-size-full-'.$uniquie_id.'" class="help">('.$photo->height.'&nbsp;×&nbsp;'.$photo->width.')</label></div>';
 							echo '</td>';
 						echo '</tr>';
 				echo '<tr class="submit">';
 				echo '<td></td>';
 				echo '<td class="savesend">';
-				echo '<input type="submit" name="send['.$uniquie_id.']" id="send['.$uniquie_id.']" class="button" value="Insert into Post"> <a class="wp-post-thumbnail" id="wp-post-thumbnail-'.$uniquie_id.'" href="#" onclick="WPSetAsThumbnail(&quot;'.$uniquie_id.'&quot;, &quot;2cf0f581b0&quot;);return false;">Use as featured image</a> <a href="#" class="del-link" onclick="document.getElementById(\'del_attachment_'.$uniquie_id.'\').style.display=\'block\';return false;">Delete</a>';
-				echo ' <div id="del_attachment_'.$uniquie_id.'" class="del-attachment" style="display:none;">You are about to delete <strong>splash_1920x1200.jpg</strong>.';
-				echo '<a href="post.php?action=delete&amp;post='.$uniquie_id.'&amp;_wpnonce=3bfab9cd8c" id="del['.$uniquie_id.']" class="button">Continue</a>';
-				echo '<a href="#" class="button" onclick="this.parentNode.style.display=\'none\';return false;">Cancel</a>';
+				echo '<input type="submit" name="send['.$uniquie_id.']" id="send['.$uniquie_id.']" class="button" value="Insert into Post"> <a class="wp-post-thumbnail" id="wp-post-thumbnail-'.$uniquie_id.'" href="#" onclick="WPSetAsThumbnail(&quot;'.$uniquie_id.'&quot;, &quot;2cf0f581b0&quot;);return false;">Use as featured image</a> ';
+				//echo '<a href="#" class="del-link" onclick="document.getElementById(\'del_attachment_'.$uniquie_id.'\').style.display=\'block\';return false;">Delete</a>';
+				//echo ' <div id="del_attachment_'.$uniquie_id.'" class="del-attachment" style="display:none;">You are about to delete <strong>splash_1920x1200.jpg</strong>.';
+				//echo '<a href="post.php?action=delete&amp;post='.$uniquie_id.'&amp;_wpnonce=3bfab9cd8c" id="del['.$uniquie_id.']" class="button">Continue</a>';
+				//echo '<a href="#" class="button" onclick="this.parentNode.style.display=\'none\';return false;">Cancel</a>';
 				echo '</div>';
 				echo '</td>';
 				echo '</tr>';
@@ -182,7 +184,88 @@ class WP_OpenPhoto {
 			
 			echo '</form>';
 			
-		}	
+		}
+/*echo "
+	<input type='hidden' id='type-of-78' value='image' />
+	
+	<a class='toggle describe-toggle-on' href='#'>Show</a>
+	<a class='toggle describe-toggle-off' href='#'>Hide</a>
+	<input type='hidden' name='attachments[78][menu_order]' value='0' />
+	<div class='filename new'><span class='title'>splash_1920x1200</span></div>
+	<table class='slidetoggle describe startclosed'>
+		<thead class='media-item-info' id='media-head-78'>
+		<tr valign='top'>
+			<td class='A1B1' id='thumbnail-head-78'>
+			<p><a href='http://2011.handcraftedwp.com/?attachment_id=78' target='_blank'><img class='thumbnail' src='http://2011.handcraftedwp.com/wp-content/uploads/2008/09/splash_1920x1200-150x150.jpg' alt='' style='margin-top: 3px' /></a></p>
+			<p><input type='button' id='imgedit-open-btn-78' onclick='imageEdit.open( 78, '66ac113ee6' )' class='button' value='Edit Image' /> <img src='http://2011.handcraftedwp.com/wp-admin/images/wpspin_light.gif' class='imgedit-wait-spin' alt='' /></p>
+			</td>
+			<td>
+			<p><strong>File name:</strong> splash_1920x1200.jpg</p>
+			<p><strong>File type:</strong> image/jpeg</p>
+			<p><strong>Upload date:</strong> November 9, 2011</p><p><strong>Dimensions:</strong> <span id='media-dims-78'>1920&nbsp;&times;&nbsp;1200</span> </p>
+</td></tr>
+
+		</thead>
+		<tbody>
+		<tr><td colspan='2' class='imgedit-response' id='imgedit-response-78'></td></tr>
+		<tr><td style='display:none' colspan='2' class='image-editor' id='image-editor-78'></td></tr>
+		<tr class='post_title form-required'>
+			<th valign='top' scope='row' class='label'><label for='attachments[78][post_title]'><span class='alignleft'>Title</span><span class='alignright'><abbr title='required' class='required'>*</abbr></span><br class='clear' /></label></th>
+			<td class='field'><input type='text' class='text' id='attachments[78][post_title]' name='attachments[78][post_title]' value='splash_1920x1200'  aria-required='true'  /></td>
+		</tr>
+		<tr class='image_alt'>
+			<th valign='top' scope='row' class='label'><label for='attachments[78][image_alt]'><span class='alignleft'>Alternate Text</span><br class='clear' /></label></th>
+			<td class='field'><input type='text' class='text' id='attachments[78][image_alt]' name='attachments[78][image_alt]' value=''  /><p class='help'>Alt text for the image, e.g. &#8220;The Mona Lisa&#8221;</p></td>
+		</tr>
+		<tr class='post_excerpt'>
+			<th valign='top' scope='row' class='label'><label for='attachments[78][post_excerpt]'><span class='alignleft'>Caption</span><br class='clear' /></label></th>
+			<td class='field'><input type='text' class='text' id='attachments[78][post_excerpt]' name='attachments[78][post_excerpt]' value=''  /></td>
+		</tr>
+		<tr class='post_content'>
+			<th valign='top' scope='row' class='label'><label for='attachments[78][post_content]'><span class='alignleft'>Description</span><br class='clear' /></label></th>
+			<td class='field'><textarea id='attachments[78][post_content]' name='attachments[78][post_content]' ></textarea></td>
+		</tr>
+		<tr class='url'>
+			<th valign='top' scope='row' class='label'><label for='attachments[78][url]'><span class='alignleft'>Link URL</span><br class='clear' /></label></th>
+			<td class='field'>
+	<input type='text' class='text urlfield' name='attachments[78][url]' value='http://2011.handcraftedwp.com/wp-content/uploads/2008/09/splash_1920x1200.jpg' /><br />
+	<button type='button' class='button urlnone' title=''>None</button>
+	<button type='button' class='button urlfile' title='http://2011.handcraftedwp.com/wp-content/uploads/2008/09/splash_1920x1200.jpg'>File URL</button>
+	<button type='button' class='button urlpost' title='http://2011.handcraftedwp.com/?attachment_id=78'>Post URL</button>
+<p class='help'>Enter a link URL or click above for presets.</p></td>
+		</tr>
+		<tr class='align'>
+			<th valign='top' scope='row' class='label'><label for='attachments[78][align]'><span class='alignleft'>Alignment</span><br class='clear' /></label></th>
+			<td class='field'><input type='radio' name='attachments[78][align]' id='image-align-none-78' value='none' checked='checked' /><label for='image-align-none-78' class='align image-align-none-label'>None</label>
+<input type='radio' name='attachments[78][align]' id='image-align-left-78' value='left' /><label for='image-align-left-78' class='align image-align-left-label'>Left</label>
+<input type='radio' name='attachments[78][align]' id='image-align-center-78' value='center' /><label for='image-align-center-78' class='align image-align-center-label'>Center</label>
+<input type='radio' name='attachments[78][align]' id='image-align-right-78' value='right' /><label for='image-align-right-78' class='align image-align-right-label'>Right</label></td>
+		</tr>
+		<tr class='image-size'>
+			<th valign='top' scope='row' class='label'><label for='attachments[78][image-size]'><span class='alignleft'>Size</span><br class='clear' /></label></th>
+			<td class='field'><div class='image-size-item'><input type='radio' name='attachments[78][image-size]' id='image-size-thumbnail-78' value='thumbnail' /><label for='image-size-thumbnail-78'>Thumbnail</label> <label for='image-size-thumbnail-78' class='help'>(150&nbsp;&times;&nbsp;150)</label></div>
+<div class='image-size-item'><input type='radio' name='attachments[78][image-size]' id='image-size-medium-78' value='medium' checked='checked' /><label for='image-size-medium-78'>Medium</label> <label for='image-size-medium-78' class='help'>(300&nbsp;&times;&nbsp;187)</label></div>
+<div class='image-size-item'><input type='radio' name='attachments[78][image-size]' id='image-size-large-78' value='large' /><label for='image-size-large-78'>Large</label> <label for='image-size-large-78' class='help'>(584&nbsp;&times;&nbsp;365)</label></div>
+<div class='image-size-item'><input type='radio' name='attachments[78][image-size]' id='image-size-full-78' value='full' /><label for='image-size-full-78'>Full Size</label> <label for='image-size-full-78' class='help'>(1920&nbsp;&times;&nbsp;1200)</label></div></td>
+		</tr>
+		<tr class='submit'><td></td><td class='savesend'><input type='submit' name='send[78]' id='send[78]' class='button' value='Insert into Post'  /> <a class='wp-post-thumbnail' id='wp-post-thumbnail-78' href='#' onclick='WPSetAsThumbnail('78', 'ed6a0352a4');return false;'>Use as featured image</a> <a href='#' class='del-link' onclick='document.getElementById('del_attachment_78').style.display='block';return false;'>Delete</a>
+			 <div id='del_attachment_78' class='del-attachment' style='display:none;'>You are about to delete <strong>splash_1920x1200.jpg</strong>.
+			 <a href='post.php?action=delete&amp;post=78&amp;_wpnonce=10b3349a4b' id='del[78]' class='button'>Continue</a>
+			 <a href='#' class='button' onclick='this.parentNode.style.display='none';return false;'>Cancel</a>
+			 </div></td></tr>
+	</tbody>
+	</table>
+
+</div></div>
+<p class='ml-submit'>
+<input type='submit' name='save' id='save' class='button savebutton' value='Save all changes'  /><input type='hidden' name='post_id' id='post_id' value='38' />
+</p>
+</form>";*/
+
+
+
+
+
 	}	
 }
 
