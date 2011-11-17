@@ -61,58 +61,8 @@ class WP_OpenPhoto {
 		$post_id = $_GET["post_id"];
 		
 		if ($photos)
-		{ ?>
-			<script>
-			jQuery(document).ready(function() {
-				jQuery('.op-send-to-editor').click(function() {
-					var parent_el, title_text, alt_text, caption_text, url_text, alignment, size, size_alt, op_single, img;
-					parent_el = jQuery(this).parents('tbody');
-					title_text = parent_el.find('.title-text').val();
-					alt_text = parent_el.find('.alt-text').val();
-					caption_text = parent_el.find('.caption-text').val();
-					url_text = parent_el.find('.url-text').val();
-					alignment = parent_el.find('.alignment-area input[type="radio"]]:checked').val();
-					size = parent_el.find('.size-area input[type="radio"]]:checked').val();
-					size_alt =  parent_el.find('.size-area input[type="radio"]]:checked').attr('alt');
-					size_class = 'size-' + size;
-					op_single = parent_el.find('#op-single').attr('name');
-					img = '';
-					
-					if (alt_text === "") {
-						alt_text = title_text;
-					}
-					
-					title_text = title_text;
-					
-					if (alignment == 'none') {
-						alignment = 'alignnone';
-					} else if (alignment == 'left') {
-						alignment = ' alignleft ';
-					} else if (alignment == 'center') {
-						alignment = ' aligncenter ';
-					} else if (alignment == 'right') {
-						alignment = ' alignright ';
-					}
-					
-					if (caption_text != "") {
-						img += '&#91;caption id="'+op_single+'" align="'+alignment + '" width="" caption="'+caption_text+'"&#93;';
-						aligment = '';
-					}
-					
-					img += '<a href="'+size_alt+'" id="'+op_single+'"><img class="'+alignment + ' ' + size_class + ' ' + '" title="' + title_text + '" src="' + size_alt + '" alt="' + alt_text + '" width="" height="" /></a>';
-					
-					if (caption_text != "") {
-						img += '&#91;/caption&#93;';
-					}
-					
-					var win = window.dialogArguments || opener || parent || top;
-					win.send_to_editor(img);
-					
-					return false;
-				});
-			});
-			</script>
-			<?php echo '<form enctype="multipart/form-data" method="post" action="'.home_url().'/wp-admin/media-upload.php?type=image&amp;tab=library&amp;post_id='.$post_id.'" class="media-upload-form validate" id="library-form">';
+		{
+			echo '<form enctype="multipart/form-data" method="post" action="'.home_url().'/wp-admin/media-upload.php?type=image&amp;tab=library&amp;post_id='.$post_id.'" class="media-upload-form validate" id="library-form">';
 			echo '<input type="hidden" id="_wpnonce" name="_wpnonce" value="5acb57476d" /><input type="hidden" name="_wp_http_referer" value="/wp-admin/media-upload.php?post_id='.$post_id.'&amp;type=image&amp;tab=library" />';
 			echo '<script type="text/javascript">
 			<!--
@@ -159,29 +109,28 @@ class WP_OpenPhoto {
 						echo '</tr>';
 					echo '</thead>';
 					echo '<tbody>';
-						echo '<input type="hidden" name="op-attachment-'.$photo->id.'" id="op-single" >';
 						echo '<tr><td colspan="2" class="imgedit-response" id="imgedit-response-'.$uniquie_id.'"></td></tr>';
 						echo '<tr><td style="display:none" colspan="2" class="image-editor" id="image-editor-'.$uniquie_id.'"></td></tr>';
 						echo '<tr class="post_title form-required">';
 							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$uniquie_id.'][post_title]"><span class="alignleft">Title</span><span class="alignright"><abbr title="required" class="required">*</abbr></span><br class="clear"></label></th>';
-							echo '<td class="field"><input type="text" class="text title-text" id="attachments['.$uniquie_id.'][post_title]" name="attachments['.$uniquie_id.'][post_title]" value="'.substr(strrchr($photo->pathOriginal, "/"), 1 ).'" aria-required="true"></td>';
+							echo '<td class="field"><input type="text" class="text" id="attachments['.$uniquie_id.'][post_title]" name="attachments['.$uniquie_id.'][post_title]" value="'.substr(strrchr($photo->pathOriginal, "/"), 1 ).'" aria-required="true"></td>';
 						echo '</tr>';
 						echo '<tr class="image_alt">';
 							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$uniquie_id.'][image_alt]"><span class="alignleft">Alternate Text</span><br class="clear"></label></th>';
-							echo '<td class="field"><input type="text" class="text alt-text" id="attachments['.$uniquie_id.'][image_alt]" name="attachments['.$uniquie_id.'][image_alt]" value=""><p class="help">Alt text for the image, e.g. "The Mona Lisa"</p></td>';
+							echo '<td class="field"><input type="text" class="text" id="attachments['.$uniquie_id.'][image_alt]" name="attachments['.$uniquie_id.'][image_alt]" value=""><p class="help">Alt text for the image, e.g. "The Mona Lisa"</p></td>';
 						echo '</tr>';
 						echo '<tr class="post_excerpt">';
 							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$uniquie_id.'][post_excerpt]"><span class="alignleft">Caption</span><br class="clear"></label></th>';
-							echo '<td class="field"><input type="text" class="text caption-text" id="attachments['.$uniquie_id.'][post_excerpt]" name="attachments['.$uniquie_id.'][post_excerpt]" value=""></td>';
+							echo '<td class="field"><input type="text" class="text" id="attachments['.$uniquie_id.'][post_excerpt]" name="attachments['.$uniquie_id.'][post_excerpt]" value=""></td>';
 						echo '</tr>';
-						//echo '<tr class="post_content">';
-							//echo '<th valign="top" scope="row" class="label"><label for="attachments['.$uniquie_id.'][post_content]"><span class="alignleft">Description</span><br class="clear"></label></th>';
-							//echo '<td class="field"><textarea id="attachments['.$uniquie_id.'][post_content]" name="attachments['.$uniquie_id.'][post_content]"></textarea></td>';
-						//echo '</tr>';
+						echo '<tr class="post_content">';
+							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$uniquie_id.'][post_content]"><span class="alignleft">Description</span><br class="clear"></label></th>';
+							echo '<td class="field"><textarea id="attachments['.$uniquie_id.'][post_content]" name="attachments['.$uniquie_id.'][post_content]"></textarea></td>';
+						echo '</tr>';
 						echo '<tr class="url">';
 							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$uniquie_id.'][url]"><span class="alignleft">Link URL</span><br class="clear"></label></th>';
 							echo '<td class="field">';
-								echo '<input type="text" class="text urlfield url-text" name="attachments['.$uniquie_id.'][url]" value="http://'.$photo->host.$photo->pathOriginal.'"><br>';
+								echo '<input type="text" class="text urlfield" name="attachments['.$uniquie_id.'][url]" value="http://'.$photo->host.$photo->pathOriginal.'"><br>';
 								echo '<button type="button" class="button urlnone" title="">None</button>';
 								echo '<button type="button" class="button urlfile" title="http://'.$photo->host.$photo->pathOriginal.'">File URL</button>';
 								//echo '<button type="button" class="button urlpost" title="http://2011.handcraftedwp.com/?attachment_id='.$uniquie_id.'">Post URL</button>';
@@ -190,7 +139,7 @@ class WP_OpenPhoto {
 						echo '</tr>';
 						echo '<tr class="align">';
 							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$uniquie_id.'][align]"><span class="alignleft">Alignment</span><br class="clear"></label></th>';
-							echo '<td class="field alignment-area">';
+							echo '<td class="field">';
 								echo '<input type="radio" name="attachments['.$uniquie_id.'][align]" id="image-align-none-'.$uniquie_id.'" value="none" checked="checked"><label for="image-align-none-'.$uniquie_id.'" class="align image-align-none-label">None</label>';
 								echo '<input type="radio" name="attachments['.$uniquie_id.'][align]" id="image-align-left-'.$uniquie_id.'" value="left"><label for="image-align-left-'.$uniquie_id.'" class="align image-align-left-label">Left</label>';
 								echo '<input type="radio" name="attachments['.$uniquie_id.'][align]" id="image-align-center-'.$uniquie_id.'" value="center"><label for="image-align-center-'.$uniquie_id.'" class="align image-align-center-label">Center</label>';
@@ -199,19 +148,17 @@ class WP_OpenPhoto {
 						echo '</tr>';
 						echo '<tr class="image-size">';
 							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$uniquie_id.'][image-size]"><span class="alignleft">Size</span><br class="clear"></label></th>';
-							echo '<td class="field size-area">';
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$uniquie_id.'][image-size]" id="image-size-thumbnail-'.$uniquie_id.'" value="thumbnail" alt="'.$photo->path32x32.'" checked="checked"><label for="image-size-thumbnail-'.$uniquie_id.'">Thumbnail</label> <label for="image-size-thumbnail-'.$uniquie_id.'" class="help">(150&nbsp;×&nbsp;150)</label></div>';
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$uniquie_id.'][image-size]" id="image-size-medium-'.$uniquie_id.'" value="medium" alt="'.$photo->path128x128.'"><label for="image-size-medium-'.$uniquie_id.'">Medium</label> <label for="image-size-medium-'.$uniquie_id.'" class="help">(300&nbsp;×&nbsp;187)</label></div>';
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$uniquie_id.'][image-size]" id="image-size-large-'.$uniquie_id.'" value="large" alt="'.$photo->path32x32.'"><label for="image-size-large-'.$uniquie_id.'">Large</label> <label for="image-size-large-'.$uniquie_id.'" class="help">(584&nbsp;×&nbsp;365)</label></div>';
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$uniquie_id.'][image-size]" id="image-size-full-'.$uniquie_id.'" value="full" alt="'.$photo->path32x32.'"><label for="image-size-full-'.$uniquie_id.'">Full Size</label> <label for="image-size-full-'.$uniquie_id.'" class="help">('.$photo->height.'&nbsp;×&nbsp;'.$photo->width.')</label></div>';
+							echo '<td class="field">';
+								echo '<div class="image-size-item"><input type="radio" name="attachments['.$uniquie_id.'][image-size]" id="image-size-thumbnail-'.$uniquie_id.'" value="thumbnail"><label for="image-size-thumbnail-'.$uniquie_id.'">Thumbnail</label> <label for="image-size-thumbnail-'.$uniquie_id.'" class="help">(150&nbsp;×&nbsp;150)</label></div>';
+								echo '<div class="image-size-item"><input type="radio" name="attachments['.$uniquie_id.'][image-size]" id="image-size-medium-'.$uniquie_id.'" value="medium" checked="checked"><label for="image-size-medium-'.$uniquie_id.'">Medium</label> <label for="image-size-medium-'.$uniquie_id.'" class="help">(300&nbsp;×&nbsp;187)</label></div>';
+								echo '<div class="image-size-item"><input type="radio" name="attachments['.$uniquie_id.'][image-size]" id="image-size-large-'.$uniquie_id.'" value="large"><label for="image-size-large-'.$uniquie_id.'">Large</label> <label for="image-size-large-'.$uniquie_id.'" class="help">(584&nbsp;×&nbsp;365)</label></div>';
+								echo '<div class="image-size-item"><input type="radio" name="attachments['.$uniquie_id.'][image-size]" id="image-size-full-'.$uniquie_id.'" value="full"><label for="image-size-full-'.$uniquie_id.'">Full Size</label> <label for="image-size-full-'.$uniquie_id.'" class="help">('.$photo->height.'&nbsp;×&nbsp;'.$photo->width.')</label></div>';
 							echo '</td>';
 						echo '</tr>';
 				echo '<tr class="submit">';
 				echo '<td></td>';
 				echo '<td class="savesend">';
-				echo '<input type="submit" name="send['.$uniquie_id.']" id="send['.$uniquie_id.']" class="op-send-to-editor button" value="Insert into Post">';
-				//echo '<input type="submit" name="send['.$uniquie_id.']" id="send['.$uniquie_id.']" class="button" value="Insert into Post"> ';
-				//echo '<a class="wp-post-thumbnail" id="wp-post-thumbnail-'.$uniquie_id.'" href="#" onclick="WPSetAsThumbnail(&quot;'.$uniquie_id.'&quot;, &quot;2cf0f581b0&quot;);return false;">Use as featured image</a> ';
+				echo '<input type="submit" name="send['.$uniquie_id.']" id="send['.$uniquie_id.']" class="button" value="Insert into Post"> <a class="wp-post-thumbnail" id="wp-post-thumbnail-'.$uniquie_id.'" href="#" onclick="WPSetAsThumbnail(&quot;'.$uniquie_id.'&quot;, &quot;2cf0f581b0&quot;);return false;">Use as featured image</a> ';
 				//echo '<a href="#" class="del-link" onclick="document.getElementById(\'del_attachment_'.$uniquie_id.'\').style.display=\'block\';return false;">Delete</a>';
 				//echo ' <div id="del_attachment_'.$uniquie_id.'" class="del-attachment" style="display:none;">You are about to delete <strong>splash_1920x1200.jpg</strong>.';
 				//echo '<a href="post.php?action=delete&amp;post='.$uniquie_id.'&amp;_wpnonce=3bfab9cd8c" id="del['.$uniquie_id.']" class="button">Continue</a>';
@@ -238,6 +185,87 @@ class WP_OpenPhoto {
 			echo '</form>';
 			
 		}
+/*echo "
+	<input type='hidden' id='type-of-78' value='image' />
+	
+	<a class='toggle describe-toggle-on' href='#'>Show</a>
+	<a class='toggle describe-toggle-off' href='#'>Hide</a>
+	<input type='hidden' name='attachments[78][menu_order]' value='0' />
+	<div class='filename new'><span class='title'>splash_1920x1200</span></div>
+	<table class='slidetoggle describe startclosed'>
+		<thead class='media-item-info' id='media-head-78'>
+		<tr valign='top'>
+			<td class='A1B1' id='thumbnail-head-78'>
+			<p><a href='http://2011.handcraftedwp.com/?attachment_id=78' target='_blank'><img class='thumbnail' src='http://2011.handcraftedwp.com/wp-content/uploads/2008/09/splash_1920x1200-150x150.jpg' alt='' style='margin-top: 3px' /></a></p>
+			<p><input type='button' id='imgedit-open-btn-78' onclick='imageEdit.open( 78, '66ac113ee6' )' class='button' value='Edit Image' /> <img src='http://2011.handcraftedwp.com/wp-admin/images/wpspin_light.gif' class='imgedit-wait-spin' alt='' /></p>
+			</td>
+			<td>
+			<p><strong>File name:</strong> splash_1920x1200.jpg</p>
+			<p><strong>File type:</strong> image/jpeg</p>
+			<p><strong>Upload date:</strong> November 9, 2011</p><p><strong>Dimensions:</strong> <span id='media-dims-78'>1920&nbsp;&times;&nbsp;1200</span> </p>
+</td></tr>
+
+		</thead>
+		<tbody>
+		<tr><td colspan='2' class='imgedit-response' id='imgedit-response-78'></td></tr>
+		<tr><td style='display:none' colspan='2' class='image-editor' id='image-editor-78'></td></tr>
+		<tr class='post_title form-required'>
+			<th valign='top' scope='row' class='label'><label for='attachments[78][post_title]'><span class='alignleft'>Title</span><span class='alignright'><abbr title='required' class='required'>*</abbr></span><br class='clear' /></label></th>
+			<td class='field'><input type='text' class='text' id='attachments[78][post_title]' name='attachments[78][post_title]' value='splash_1920x1200'  aria-required='true'  /></td>
+		</tr>
+		<tr class='image_alt'>
+			<th valign='top' scope='row' class='label'><label for='attachments[78][image_alt]'><span class='alignleft'>Alternate Text</span><br class='clear' /></label></th>
+			<td class='field'><input type='text' class='text' id='attachments[78][image_alt]' name='attachments[78][image_alt]' value=''  /><p class='help'>Alt text for the image, e.g. &#8220;The Mona Lisa&#8221;</p></td>
+		</tr>
+		<tr class='post_excerpt'>
+			<th valign='top' scope='row' class='label'><label for='attachments[78][post_excerpt]'><span class='alignleft'>Caption</span><br class='clear' /></label></th>
+			<td class='field'><input type='text' class='text' id='attachments[78][post_excerpt]' name='attachments[78][post_excerpt]' value=''  /></td>
+		</tr>
+		<tr class='post_content'>
+			<th valign='top' scope='row' class='label'><label for='attachments[78][post_content]'><span class='alignleft'>Description</span><br class='clear' /></label></th>
+			<td class='field'><textarea id='attachments[78][post_content]' name='attachments[78][post_content]' ></textarea></td>
+		</tr>
+		<tr class='url'>
+			<th valign='top' scope='row' class='label'><label for='attachments[78][url]'><span class='alignleft'>Link URL</span><br class='clear' /></label></th>
+			<td class='field'>
+	<input type='text' class='text urlfield' name='attachments[78][url]' value='http://2011.handcraftedwp.com/wp-content/uploads/2008/09/splash_1920x1200.jpg' /><br />
+	<button type='button' class='button urlnone' title=''>None</button>
+	<button type='button' class='button urlfile' title='http://2011.handcraftedwp.com/wp-content/uploads/2008/09/splash_1920x1200.jpg'>File URL</button>
+	<button type='button' class='button urlpost' title='http://2011.handcraftedwp.com/?attachment_id=78'>Post URL</button>
+<p class='help'>Enter a link URL or click above for presets.</p></td>
+		</tr>
+		<tr class='align'>
+			<th valign='top' scope='row' class='label'><label for='attachments[78][align]'><span class='alignleft'>Alignment</span><br class='clear' /></label></th>
+			<td class='field'><input type='radio' name='attachments[78][align]' id='image-align-none-78' value='none' checked='checked' /><label for='image-align-none-78' class='align image-align-none-label'>None</label>
+<input type='radio' name='attachments[78][align]' id='image-align-left-78' value='left' /><label for='image-align-left-78' class='align image-align-left-label'>Left</label>
+<input type='radio' name='attachments[78][align]' id='image-align-center-78' value='center' /><label for='image-align-center-78' class='align image-align-center-label'>Center</label>
+<input type='radio' name='attachments[78][align]' id='image-align-right-78' value='right' /><label for='image-align-right-78' class='align image-align-right-label'>Right</label></td>
+		</tr>
+		<tr class='image-size'>
+			<th valign='top' scope='row' class='label'><label for='attachments[78][image-size]'><span class='alignleft'>Size</span><br class='clear' /></label></th>
+			<td class='field'><div class='image-size-item'><input type='radio' name='attachments[78][image-size]' id='image-size-thumbnail-78' value='thumbnail' /><label for='image-size-thumbnail-78'>Thumbnail</label> <label for='image-size-thumbnail-78' class='help'>(150&nbsp;&times;&nbsp;150)</label></div>
+<div class='image-size-item'><input type='radio' name='attachments[78][image-size]' id='image-size-medium-78' value='medium' checked='checked' /><label for='image-size-medium-78'>Medium</label> <label for='image-size-medium-78' class='help'>(300&nbsp;&times;&nbsp;187)</label></div>
+<div class='image-size-item'><input type='radio' name='attachments[78][image-size]' id='image-size-large-78' value='large' /><label for='image-size-large-78'>Large</label> <label for='image-size-large-78' class='help'>(584&nbsp;&times;&nbsp;365)</label></div>
+<div class='image-size-item'><input type='radio' name='attachments[78][image-size]' id='image-size-full-78' value='full' /><label for='image-size-full-78'>Full Size</label> <label for='image-size-full-78' class='help'>(1920&nbsp;&times;&nbsp;1200)</label></div></td>
+		</tr>
+		<tr class='submit'><td></td><td class='savesend'><input type='submit' name='send[78]' id='send[78]' class='button' value='Insert into Post'  /> <a class='wp-post-thumbnail' id='wp-post-thumbnail-78' href='#' onclick='WPSetAsThumbnail('78', 'ed6a0352a4');return false;'>Use as featured image</a> <a href='#' class='del-link' onclick='document.getElementById('del_attachment_78').style.display='block';return false;'>Delete</a>
+			 <div id='del_attachment_78' class='del-attachment' style='display:none;'>You are about to delete <strong>splash_1920x1200.jpg</strong>.
+			 <a href='post.php?action=delete&amp;post=78&amp;_wpnonce=10b3349a4b' id='del[78]' class='button'>Continue</a>
+			 <a href='#' class='button' onclick='this.parentNode.style.display='none';return false;'>Cancel</a>
+			 </div></td></tr>
+	</tbody>
+	</table>
+
+</div></div>
+<p class='ml-submit'>
+<input type='submit' name='save' id='save' class='button savebutton' value='Save all changes'  /><input type='hidden' name='post_id' id='post_id' value='38' />
+</p>
+</form>";*/
+
+
+
+
+
 	}	
 }
 
