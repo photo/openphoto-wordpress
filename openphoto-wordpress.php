@@ -36,9 +36,14 @@ class WP_OpenPhoto {
 	
 	function media_render_openphoto_tab() {
 		media_upload_header();
+		
+		$post_id = intval($_GET['post_id']);
+		$m = $_POST['m'];
 
 		$openphoto = get_option('openphoto_wordpress_settings');
 
+		
+		// get photos 
 		$curl_get  = '?';
 		$curl_get .= 'oauth_consumer_key=' . $openphoto["oauth_consumer_key"];
 		$curl_get .= '&oauth_consumer_secret=' . $openphoto["oauth_consumer_secret"];
@@ -54,10 +59,29 @@ class WP_OpenPhoto {
 		$ch = curl_init();
 		curl_setopt_array($ch, $curl_options);
 		$response = curl_exec($ch);
-		curl_close($ch);
-		
+		curl_close($ch);		
 		$response = json_decode($response);
 		$photos = $response->result;
+		
+		// get tags 
+		$curl_get  = '?';
+		$curl_get .= 'oauth_consumer_key=' . $openphoto["oauth_consumer_key"];
+		$curl_get .= '&oauth_consumer_secret=' . $openphoto["oauth_consumer_secret"];
+		$curl_get .= '&oauth_token=' . $openphoto["oauth_token"];
+		$curl_get .= '&oauth_token_secret=' . $openphoto["oauth_token_secret"];		
+		$curl_options = array(
+	  				CURLOPT_HEADER => 0,
+	  				CURLOPT_URL => trailingslashit($openphoto['host']) . 'tags/list.json' . $curl_get,
+	  				CURLOPT_FRESH_CONNECT => 1,
+	  				CURLOPT_RETURNTRANSFER => 1,
+		);
+		$ch = curl_init();
+		curl_setopt_array($ch, $curl_options);
+		$response = curl_exec($ch);
+		curl_close($ch);
+		$response = json_decode($response);
+		$tags = $response->result;
+		
 		$post_id = $_GET["post_id"];
 		
 		if ($photos)
@@ -114,24 +138,26 @@ class WP_OpenPhoto {
 			});
 			</script>
             
-            <form id="op-filter" action="" method="get">
+			<?php if ($tags) { ?>
+            <form id="op-filter" action="?post_id=<?php echo $post_id ?>&type=image&tab=openphoto" method="post">
                 <div class="tablenav">
                     <div class="alignleft actions">
                         <select name="m">
                             <option value="0">Show all tags</option>
                             <?php
-                            foreach($photos as $photo) {
-								$tags = $photo->tags;
 								foreach($tags as $tag) {
-									echo '<option value="'.$tag.'">' . $tag . '</option>';
+									$selected = "";	
+									if ($tag->id==$m) $selected = ' selected="selected"';
+									if ($tag->count > 0) echo '<option value="'.$tag->id .'"' . $selected . '>' . $tag->id . ' (' . $tag->count . ')</option>';
 								}
-                            } ?>
+                            ?>
                             </select>
                         <input type="submit" name="post-query-submit" id="op-post-query-submit" class="button-secondary" value="Filter »">
                     </div>
                     <br class="clear">
                 </div>
             </form>
+            <?php } ?>
             
 			<?php echo '<form enctype="multipart/form-data" method="post" action="'.home_url().'/wp-admin/media-upload.php?type=image&amp;tab=library&amp;post_id='.$post_id.'" class="media-upload-form validate" id="library-form">';
 			echo '<input type="hidden" id="_wpnonce" name="_wpnonce" value="5acb57476d" /><input type="hidden" name="_wp_http_referer" value="/wp-admin/media-upload.php?post_id='.$post_id.'&amp;type=image&amp;tab=library" />';
