@@ -52,7 +52,7 @@ class WP_OpenPhoto {
 		$curl_get .= '&returnSizes=32x32,128x128';
 		if(!empty($m)) $curl_get .= '&tags=' . $m;
 
-//print_r($curl_get); die();
+//print_r($curl_get); echo '<br><br>';
 				
 		$curl_options = array(
 	  				CURLOPT_HEADER => 0,
@@ -64,7 +64,7 @@ class WP_OpenPhoto {
 		curl_setopt_array($ch, $curl_options);
 		$response = curl_exec($ch);
 		curl_close($ch);		
-		$response = json_decode($response);
+		$response = json_decode($response); //echo '<pre>' . print_r($response,true) . '</pre>'; die();
 		$photos = $response->result;
 		
 		// get tags 
@@ -140,6 +140,17 @@ class WP_OpenPhoto {
 				});
 			});
 			</script>
+			
+<?php if ($photos) {
+	
+	$total_pages = $photos[0]->totalPages;
+			$current_page = $photos[0]->currentPage;
+			$total_photos = $photos[0]->totalRows;
+			
+echo '<p>Images ('. $total_photos . ')</p>';			        
+        	
+	
+}?>		
             
 			<?php if ($tags) { ?>
             <form id="op-filter" action="?post_id=<?php echo $post_id ?>&type=image&tab=openphoto" method="post">
@@ -164,7 +175,24 @@ class WP_OpenPhoto {
             <?php }
             
 		if ($photos)
-		{            
+		{			
+			if ($total_pages > 1)
+			{
+				echo '<div class="tablenav-pages">';
+				for($i==1;$i<=$total_pages;$i++) {
+					$current = "";	
+					if ($current_page == $i) {
+						echo '<span class="page-numbers'. $current . '">'. $i . '</span>';
+					} else {
+						echo '<a class="page-numbers" href="#">'. $i . '</a>';
+					}
+				}
+				if ($current_page < $total_pages)
+				{
+					echo '<a class="next page-numbers" href="/wp-admin/media-upload.php?post_id='. $post_id . '&amp;type=image&amp;tab=openphoto&amp;pg='. ($current_page+1) . '">»</a>';
+				}
+				echo '</div>';
+			}       
             
 			echo '<form enctype="multipart/form-data" method="post" action="'.home_url().'/wp-admin/media-upload.php?type=image&amp;tab=library&amp;post_id='.$post_id.'" class="media-upload-form validate" id="library-form">';
 			echo '<input type="hidden" id="_wpnonce" name="_wpnonce" value="5acb57476d" /><input type="hidden" name="_wp_http_referer" value="/wp-admin/media-upload.php?post_id='.$post_id.'&amp;type=image&amp;tab=library" />';
@@ -182,14 +210,14 @@ class WP_OpenPhoto {
 			echo '<div id="media-items">';
 		
 			foreach($photos as $photo)
-			{
-				$uniquie_id = $photo->dateTaken;
+			{//echo '<pre>' . print_r($photos,true) . '</pre>'; die();
+				$unique_id = intval($photo->dateUploaded);
 				
-				echo '<div id="media-item-'.$uniquie_id.'" class="media-item child-of-'.$post_id.' preloaded"><div class="progress" style="display: none; "></div><div id="media-upload-error-'.$uniquie_id.'"></div><div class="filename"></div>';
-				echo '<input type="hidden" id="type-of-'.$uniquie_id.'" value="image">';
+				echo '<div id="media-item-'.$unique_id.'" class="media-item child-of-'.$post_id.' preloaded"><div class="progress" style="display: none; "></div><div id="media-upload-error-'.$unique_id.'"></div><div class="filename"></div>';
+				echo '<input type="hidden" id="type-of-'.$unique_id.'" value="image">';
 				echo '<a class="toggle describe-toggle-on" href="#">Show</a>';
 				echo '<a class="toggle describe-toggle-off" href="#">Hide</a>';
-				echo '<input type="hidden" name="attachments['.$uniquie_id.'][menu_order]" value="0">';
+				echo '<input type="hidden" name="attachments['.$unique_id.'][menu_order]" value="0">';
 				echo '<div class="filename new"><span class="title">';
 				if ($photo->title != "") {
 					echo $photo->title;
@@ -198,77 +226,77 @@ class WP_OpenPhoto {
 				}
 				echo '</span></div>';
 				echo '<table class="slidetoggle describe startclosed">';
-					echo '<thead class="media-item-info" id="media-head-'.$uniquie_id.'">';
+					echo '<thead class="media-item-info" id="media-head-'.$unique_id.'">';
 						echo '<tr valign="top">';
-							echo '<td class="A1B1" id="thumbnail-head-'.$uniquie_id.'">';
+							echo '<td class="A1B1" id="thumbnail-head-'.$unique_id.'">';
 								echo '<p style="height:100px;padding-right:10px;"><a href="'.$post->path128x128.'" target="_blank"><img class="thumbnail" src="'.$photo->path128x128.'" alt="" style="margin-top: 3px;"></a></p>';
-								//echo '<p><input type="button" id="imgedit-open-btn-'.$uniquie_id.'" onclick="imageEdit.open( '.$uniquie_id.', &quot;98f2ea4727&quot; )" class="button" value="Edit Image"> <img src="'.home_url().'/wp-admin/images/wpspin_light.gif" class="imgedit-wait-spin" alt=""></p>';
+								//echo '<p><input type="button" id="imgedit-open-btn-'.$unique_id.'" onclick="imageEdit.open( '.$unique_id.', &quot;98f2ea4727&quot; )" class="button" value="Edit Image"> <img src="'.home_url().'/wp-admin/images/wpspin_light.gif" class="imgedit-wait-spin" alt=""></p>';
 							echo '</td>';
 							echo '<td>';
 								echo '<p><strong>File name:</strong> '.substr(strrchr($photo->pathOriginal, "/"), 1 ).'</p>';
 								echo '<p><strong>File type:</strong> .'.substr(strrchr($photo->pathOriginal, "."), 1 ).'</p>';
-								echo '<p><strong>Upload date:</strong> '.date('F d Y', $photo->dateTaken).'</p>';
-								echo '<p><strong>Dimensions:</strong> <span id="media-dims-'.$uniquie_id.'">'.$photo->width.'&nbsp;×&nbsp;'.$photo->height.'</span> </p>';
+								echo '<p><strong>Upload date:</strong> '.date('F d Y', (int) $photo->dateUploaded).'</p>';
+								echo '<p><strong>Dimensions:</strong> <span id="media-dims-'.$unique_id.'">'.$photo->width.'&nbsp;×&nbsp;'.$photo->height.'</span> </p>';
 							echo '</td>';
 						echo '</tr>';
 					echo '</thead>';
 					echo '<tbody>';
 						echo '<input type="hidden" name="op-attachment-'.$photo->id.'" id="op-single" >';
-						echo '<tr><td colspan="2" class="imgedit-response" id="imgedit-response-'.$uniquie_id.'"></td></tr>';
-						echo '<tr><td style="display:none" colspan="2" class="image-editor" id="image-editor-'.$uniquie_id.'"></td></tr>';
+						echo '<tr><td colspan="2" class="imgedit-response" id="imgedit-response-'.$unique_id.'"></td></tr>';
+						echo '<tr><td style="display:none" colspan="2" class="image-editor" id="image-editor-'.$unique_id.'"></td></tr>';
 						echo '<tr class="post_title form-required">';
-							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$uniquie_id.'][post_title]"><span class="alignleft">Title</span><span class="alignright"><abbr title="required" class="required">*</abbr></span><br class="clear"></label></th>';
-							echo '<td class="field"><input type="text" class="text title-text" id="attachments['.$uniquie_id.'][post_title]" name="attachments['.$uniquie_id.'][post_title]" value="'.substr(strrchr($photo->pathOriginal, "/"), 1 ).'" aria-required="true"></td>';
+							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$unique_id.'][post_title]"><span class="alignleft">Title</span><span class="alignright"><abbr title="required" class="required">*</abbr></span><br class="clear"></label></th>';
+							echo '<td class="field"><input type="text" class="text title-text" id="attachments['.$unique_id.'][post_title]" name="attachments['.$unique_id.'][post_title]" value="'.substr(strrchr($photo->pathOriginal, "/"), 1 ).'" aria-required="true"></td>';
 						echo '</tr>';
 						echo '<tr class="image_alt">';
-							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$uniquie_id.'][image_alt]"><span class="alignleft">Alternate Text</span><br class="clear"></label></th>';
-							echo '<td class="field"><input type="text" class="text alt-text" id="attachments['.$uniquie_id.'][image_alt]" name="attachments['.$uniquie_id.'][image_alt]" value=""><p class="help">Alt text for the image, e.g. "The Mona Lisa"</p></td>';
+							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$unique_id.'][image_alt]"><span class="alignleft">Alternate Text</span><br class="clear"></label></th>';
+							echo '<td class="field"><input type="text" class="text alt-text" id="attachments['.$unique_id.'][image_alt]" name="attachments['.$unique_id.'][image_alt]" value=""><p class="help">Alt text for the image, e.g. "The Mona Lisa"</p></td>';
 						echo '</tr>';
 						echo '<tr class="post_excerpt">';
-							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$uniquie_id.'][post_excerpt]"><span class="alignleft">Caption</span><br class="clear"></label></th>';
-							echo '<td class="field"><input type="text" class="text caption-text" id="attachments['.$uniquie_id.'][post_excerpt]" name="attachments['.$uniquie_id.'][post_excerpt]" value=""></td>';
+							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$unique_id.'][post_excerpt]"><span class="alignleft">Caption</span><br class="clear"></label></th>';
+							echo '<td class="field"><input type="text" class="text caption-text" id="attachments['.$unique_id.'][post_excerpt]" name="attachments['.$unique_id.'][post_excerpt]" value=""></td>';
 						echo '</tr>';
 						//echo '<tr class="post_content">';
-							//echo '<th valign="top" scope="row" class="label"><label for="attachments['.$uniquie_id.'][post_content]"><span class="alignleft">Description</span><br class="clear"></label></th>';
-							//echo '<td class="field"><textarea id="attachments['.$uniquie_id.'][post_content]" name="attachments['.$uniquie_id.'][post_content]"></textarea></td>';
+							//echo '<th valign="top" scope="row" class="label"><label for="attachments['.$unique_id.'][post_content]"><span class="alignleft">Description</span><br class="clear"></label></th>';
+							//echo '<td class="field"><textarea id="attachments['.$unique_id.'][post_content]" name="attachments['.$unique_id.'][post_content]"></textarea></td>';
 						//echo '</tr>';
 						echo '<tr class="url">';
-							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$uniquie_id.'][url]"><span class="alignleft">Link URL</span><br class="clear"></label></th>';
+							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$unique_id.'][url]"><span class="alignleft">Link URL</span><br class="clear"></label></th>';
 							echo '<td class="field">';
-								echo '<input type="text" class="text urlfield url-text" name="attachments['.$uniquie_id.'][url]" value="http://'.$photo->host.$photo->pathOriginal.'"><br>';
+								echo '<input type="text" class="text urlfield url-text" name="attachments['.$unique_id.'][url]" value="http://'.$photo->host.$photo->pathOriginal.'"><br>';
 								echo '<button type="button" class="button urlnone" title="">None</button>';
 								echo '<button type="button" class="button urlfile" title="http://'.$photo->host.$photo->pathOriginal.'">File URL</button>';
-								//echo '<button type="button" class="button urlpost" title="http://2011.handcraftedwp.com/?attachment_id='.$uniquie_id.'">Post URL</button>';
+								//echo '<button type="button" class="button urlpost" title="http://2011.handcraftedwp.com/?attachment_id='.$unique_id.'">Post URL</button>';
 								echo '<p class="help">Enter a link URL or click above for presets.</p>';
 							echo '</td>';
 						echo '</tr>';
 						echo '<tr class="align">';
-							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$uniquie_id.'][align]"><span class="alignleft">Alignment</span><br class="clear"></label></th>';
+							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$unique_id.'][align]"><span class="alignleft">Alignment</span><br class="clear"></label></th>';
 							echo '<td class="field alignment-area">';
-								echo '<input type="radio" name="attachments['.$uniquie_id.'][align]" id="image-align-none-'.$uniquie_id.'" value="none" checked="checked"><label for="image-align-none-'.$uniquie_id.'" class="align image-align-none-label">None</label>';
-								echo '<input type="radio" name="attachments['.$uniquie_id.'][align]" id="image-align-left-'.$uniquie_id.'" value="left"><label for="image-align-left-'.$uniquie_id.'" class="align image-align-left-label">Left</label>';
-								echo '<input type="radio" name="attachments['.$uniquie_id.'][align]" id="image-align-center-'.$uniquie_id.'" value="center"><label for="image-align-center-'.$uniquie_id.'" class="align image-align-center-label">Center</label>';
-								echo '<input type="radio" name="attachments['.$uniquie_id.'][align]" id="image-align-right-'.$uniquie_id.'" value="right"><label for="image-align-right-'.$uniquie_id.'" class="align image-align-right-label">Right</label>';
+								echo '<input type="radio" name="attachments['.$unique_id.'][align]" id="image-align-none-'.$unique_id.'" value="none" checked="checked"><label for="image-align-none-'.$unique_id.'" class="align image-align-none-label">None</label>';
+								echo '<input type="radio" name="attachments['.$unique_id.'][align]" id="image-align-left-'.$unique_id.'" value="left"><label for="image-align-left-'.$unique_id.'" class="align image-align-left-label">Left</label>';
+								echo '<input type="radio" name="attachments['.$unique_id.'][align]" id="image-align-center-'.$unique_id.'" value="center"><label for="image-align-center-'.$unique_id.'" class="align image-align-center-label">Center</label>';
+								echo '<input type="radio" name="attachments['.$unique_id.'][align]" id="image-align-right-'.$unique_id.'" value="right"><label for="image-align-right-'.$unique_id.'" class="align image-align-right-label">Right</label>';
 							echo '</td>';
 						echo '</tr>';
 						echo '<tr class="image-size">';
-							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$uniquie_id.'][image-size]"><span class="alignleft">Size</span><br class="clear"></label></th>';
+							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$unique_id.'][image-size]"><span class="alignleft">Size</span><br class="clear"></label></th>';
 							echo '<td class="field size-area">';
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$uniquie_id.'][image-size]" id="image-size-thumbnail-'.$uniquie_id.'" value="thumbnail" alt="'.$photo->path32x32.'" checked="checked"><label for="image-size-thumbnail-'.$uniquie_id.'">Thumbnail</label> <label for="image-size-thumbnail-'.$uniquie_id.'" class="help">(150&nbsp;×&nbsp;150)</label></div>';
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$uniquie_id.'][image-size]" id="image-size-medium-'.$uniquie_id.'" value="medium" alt="'.$photo->path128x128.'"><label for="image-size-medium-'.$uniquie_id.'">Medium</label> <label for="image-size-medium-'.$uniquie_id.'" class="help">(300&nbsp;×&nbsp;187)</label></div>';
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$uniquie_id.'][image-size]" id="image-size-large-'.$uniquie_id.'" value="large" alt="'.$photo->path32x32.'"><label for="image-size-large-'.$uniquie_id.'">Large</label> <label for="image-size-large-'.$uniquie_id.'" class="help">(584&nbsp;×&nbsp;365)</label></div>';
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$uniquie_id.'][image-size]" id="image-size-full-'.$uniquie_id.'" value="full" alt="'.$photo->path32x32.'"><label for="image-size-full-'.$uniquie_id.'">Full Size</label> <label for="image-size-full-'.$uniquie_id.'" class="help">('.$photo->height.'&nbsp;×&nbsp;'.$photo->width.')</label></div>';
+								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-thumbnail-'.$unique_id.'" value="thumbnail" alt="'.$photo->path32x32.'" checked="checked"><label for="image-size-thumbnail-'.$unique_id.'">Thumbnail</label> <label for="image-size-thumbnail-'.$unique_id.'" class="help">(150&nbsp;×&nbsp;150)</label></div>';
+								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-medium-'.$unique_id.'" value="medium" alt="'.$photo->path128x128.'"><label for="image-size-medium-'.$unique_id.'">Medium</label> <label for="image-size-medium-'.$unique_id.'" class="help">(300&nbsp;×&nbsp;187)</label></div>';
+								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-large-'.$unique_id.'" value="large" alt="'.$photo->path32x32.'"><label for="image-size-large-'.$unique_id.'">Large</label> <label for="image-size-large-'.$unique_id.'" class="help">(584&nbsp;×&nbsp;365)</label></div>';
+								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-full-'.$unique_id.'" value="full" alt="'.$photo->path32x32.'"><label for="image-size-full-'.$unique_id.'">Full Size</label> <label for="image-size-full-'.$unique_id.'" class="help">('.$photo->height.'&nbsp;×&nbsp;'.$photo->width.')</label></div>';
 							echo '</td>';
 						echo '</tr>';
 				echo '<tr class="submit">';
 				echo '<td></td>';
 				echo '<td class="savesend">';
-				echo '<input type="submit" name="send['.$uniquie_id.']" id="send['.$uniquie_id.']" class="op-send-to-editor button" value="Insert into Post">';
-				//echo '<input type="submit" name="send['.$uniquie_id.']" id="send['.$uniquie_id.']" class="button" value="Insert into Post"> ';
-				//echo '<a class="wp-post-thumbnail" id="wp-post-thumbnail-'.$uniquie_id.'" href="#" onclick="WPSetAsThumbnail(&quot;'.$uniquie_id.'&quot;, &quot;2cf0f581b0&quot;);return false;">Use as featured image</a> ';
-				//echo '<a href="#" class="del-link" onclick="document.getElementById(\'del_attachment_'.$uniquie_id.'\').style.display=\'block\';return false;">Delete</a>';
-				//echo ' <div id="del_attachment_'.$uniquie_id.'" class="del-attachment" style="display:none;">You are about to delete <strong>splash_1920x1200.jpg</strong>.';
-				//echo '<a href="post.php?action=delete&amp;post='.$uniquie_id.'&amp;_wpnonce=3bfab9cd8c" id="del['.$uniquie_id.']" class="button">Continue</a>';
+				echo '<input type="submit" name="send['.$unique_id.']" id="send['.$unique_id.']" class="op-send-to-editor button" value="Insert into Post">';
+				//echo '<input type="submit" name="send['.$unique_id.']" id="send['.$unique_id.']" class="button" value="Insert into Post"> ';
+				//echo '<a class="wp-post-thumbnail" id="wp-post-thumbnail-'.$unique_id.'" href="#" onclick="WPSetAsThumbnail(&quot;'.$unique_id.'&quot;, &quot;2cf0f581b0&quot;);return false;">Use as featured image</a> ';
+				//echo '<a href="#" class="del-link" onclick="document.getElementById(\'del_attachment_'.$unique_id.'\').style.display=\'block\';return false;">Delete</a>';
+				//echo ' <div id="del_attachment_'.$unique_id.'" class="del-attachment" style="display:none;">You are about to delete <strong>splash_1920x1200.jpg</strong>.';
+				//echo '<a href="post.php?action=delete&amp;post='.$unique_id.'&amp;_wpnonce=3bfab9cd8c" id="del['.$unique_id.']" class="button">Continue</a>';
 				//echo '<a href="#" class="button" onclick="this.parentNode.style.display=\'none\';return false;">Cancel</a>';
 				echo '</div>';
 				echo '</td>';
