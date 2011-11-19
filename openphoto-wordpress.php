@@ -38,7 +38,7 @@ class WP_OpenPhoto {
 		media_upload_header();
 		
 		$post_id = intval($_GET['post_id']);
-		$m = $_POST['m'];
+		$m = trim($_POST['m']);
 
 		$openphoto = get_option('openphoto_wordpress_settings');
 
@@ -49,7 +49,11 @@ class WP_OpenPhoto {
 		$curl_get .= '&oauth_consumer_secret=' . $openphoto["oauth_consumer_secret"];
 		$curl_get .= '&oauth_token=' . $openphoto["oauth_token"];
 		$curl_get .= '&oauth_token_secret=' . $openphoto["oauth_token_secret"];
-		$curl_get .= '&returnSizes=32x32,128x128';		
+		$curl_get .= '&returnSizes=32x32,128x128';
+		if(!empty($m)) $curl_get .= '&tags=' . $m;
+
+//print_r($curl_get); die();
+				
 		$curl_options = array(
 	  				CURLOPT_HEADER => 0,
 	  				CURLOPT_URL => trailingslashit($openphoto['host']) . 'photos/list.json' . $curl_get,
@@ -84,8 +88,7 @@ class WP_OpenPhoto {
 		
 		$post_id = $_GET["post_id"];
 		
-		if ($photos)
-		{ ?>
+		?>
 			<script>
 			jQuery(document).ready(function() {
 				jQuery('.op-send-to-editor').click(function() {
@@ -146,6 +149,7 @@ class WP_OpenPhoto {
                             <option value="0">Show all tags</option>
                             <?php
 								foreach($tags as $tag) {
+									$tag->id = trim($tag->id);
 									$selected = "";	
 									if ($tag->id==$m) $selected = ' selected="selected"';
 									if ($tag->count > 0) echo '<option value="'.$tag->id .'"' . $selected . '>' . $tag->id . ' (' . $tag->count . ')</option>';
@@ -157,9 +161,12 @@ class WP_OpenPhoto {
                     <br class="clear">
                 </div>
             </form>
-            <?php } ?>
+            <?php }
             
-			<?php echo '<form enctype="multipart/form-data" method="post" action="'.home_url().'/wp-admin/media-upload.php?type=image&amp;tab=library&amp;post_id='.$post_id.'" class="media-upload-form validate" id="library-form">';
+		if ($photos)
+		{            
+            
+			echo '<form enctype="multipart/form-data" method="post" action="'.home_url().'/wp-admin/media-upload.php?type=image&amp;tab=library&amp;post_id='.$post_id.'" class="media-upload-form validate" id="library-form">';
 			echo '<input type="hidden" id="_wpnonce" name="_wpnonce" value="5acb57476d" /><input type="hidden" name="_wp_http_referer" value="/wp-admin/media-upload.php?post_id='.$post_id.'&amp;type=image&amp;tab=library" />';
 			echo '<script type="text/javascript">
 			<!--
