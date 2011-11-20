@@ -37,8 +37,9 @@ class WP_OpenPhoto {
 	function media_render_openphoto_tab() {
 		media_upload_header();
 		
-		$post_id = intval($_GET['post_id']);
-		$m = trim($_POST['m']);
+		$post_id = intval($_REQUEST['post_id']);
+		$m = trim($_REQUEST['m']);
+		$pg = trim($_REQUEST['pg']);
 
 		$openphoto = get_option('openphoto_wordpress_settings');
 
@@ -51,6 +52,7 @@ class WP_OpenPhoto {
 		$curl_get .= '&oauth_token_secret=' . $openphoto["oauth_token_secret"];
 		$curl_get .= '&returnSizes=32x32,128x128';
 		if(!empty($m)) $curl_get .= '&tags=' . $m;
+		if(!empty($pg)) $curl_get .= '&page=' . $pg;
 
 //print_r($curl_get); echo '<br><br>';
 				
@@ -184,7 +186,7 @@ echo '<p>Images ('. $total_photos . ')</p>';
 					if ($current_page == $i) {
 						echo '<span class="page-numbers'. $current . '">'. $i . '</span>';
 					} else {
-						echo '<a class="page-numbers" href="#">'. $i . '</a>';
+						echo '<a class="page-numbers" href="?post_id=<?php echo $post_id ?>&type=image&tab=openphoto&pg='. $i . '">'. $i . '</a>';
 					}
 				}
 				if ($current_page < $total_pages)
