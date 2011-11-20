@@ -140,61 +140,75 @@ class WP_OpenPhoto {
 					
 					return false;
 				});
+				// Weird empty page nav item showing. This removes it. Will break the nav once the code is fixed.
+				jQuery(".page-numbers").not(".next").eq(0).hide();
 			});
 			</script>
-			
-<?php if ($photos) {
-	
-	$total_pages = $photos[0]->totalPages;
-			$current_page = $photos[0]->currentPage;
-			$total_photos = $photos[0]->totalRows;
-			
-echo '<p>Images ('. $total_photos . ')</p>';			        
-        	
-	
-}?>		
-            
-			<?php if ($tags) { ?>
-            <form id="op-filter" action="?post_id=<?php echo $post_id ?>&type=image&tab=openphoto" method="post">
-                <div class="tablenav">
-                    <div class="alignleft actions">
-                        <select name="m">
-                            <option value="0">Show all tags</option>
-                            <?php
-								foreach($tags as $tag) {
-									$tag->id = trim($tag->id);
-									$selected = "";	
-									if ($tag->id==$m) $selected = ' selected="selected"';
-									if ($tag->count > 0) echo '<option value="'.$tag->id .'"' . $selected . '>' . $tag->id . ' (' . $tag->count . ')</option>';
-								}
-                            ?>
-                            </select>
-                        <input type="submit" name="post-query-submit" id="op-post-query-submit" class="button-secondary" value="Filter »">
-                    </div>
-                    <br class="clear">
+
+        <form id="op-filter" action="?post_id=<?php echo $post_id ?>&type=image&tab=openphoto" method="post">
+            <input type="hidden" name="type" value="image">
+            <input type="hidden" name="tab" value="library">
+            <input type="hidden" name="post_id" value="38">
+            <input type="hidden" name="post_mime_type" value="">
+            <ul class="subsubsub">
+            <?php if ($photos) {
+                $total_pages = $photos[0]->totalPages;
+                $current_page = $photos[0]->currentPage;
+                $total_photos = $photos[0]->totalRows;
+            echo '<li>Total Images <span class="count">(<span id="image-counter">'. $total_photos . '</span>)</span></li>';	
+            }?>
+            </ul>
+            <div class="tablenav">
+            <?php if ($photos)
+            {			
+                if ($total_pages > 1)
+                {
+                    echo '<div class="tablenav-pages">';
+                    if ($current_page > 1)
+                    {
+                    echo '<a class="next page-numbers" href="?post_id='. $post_id . '&amp;type=image&amp;tab=openphoto&amp;m=' . $m . '&amp;pg='. ($current_page-1) . '">&laquo;</a>';
+                    }
+                    for($i==1;$i<=$total_pages;$i++) {
+                        $current = "";	
+                        if ($current_page == $i) {
+                            $current = ' current ';
+                            echo '<span class="page-numbers'. $current . '">'. $i . '</span>';
+                        } else {
+                            echo '<a class="page-numbers" href="?post_id=' . $post_id . '&amp;type=image&amp;tab=openphoto&amp;m=' . $m . '&amp;pg='. $i . '">'. $i . '</a>';
+                        }
+                    }
+                    if ($current_page < $total_pages)
+                    {
+                        echo '<a class="next page-numbers" href="?post_id='. $post_id . '&amp;type=image&amp;tab=openphoto&amp;m=' . $m . '&amp;pg='. ($current_page+1) . '">&raquo;</a>';
+                    }
+                    echo '</div>';
+                }
+            } ?>
+
+            <?php if ($tags) { ?>
+                <div class="alignleft actions">
+                    <select name="m">
+                        <option value="0">Show all tags</option>
+                        <?php
+                            foreach($tags as $tag) {
+                                $tag->id = trim($tag->id);
+                                $selected = "";	
+                                if ($tag->id==$m) $selected = ' selected="selected"';
+                                if ($tag->count > 0) echo '<option value="'.$tag->id .'"' . $selected . '>' . $tag->id . ' (' . $tag->count . ')</option>';
+                            }
+                        ?>
+                        </select>
+                    <input type="submit" name="post-query-submit" id="op-post-query-submit" class="button-secondary" value="Filter »">
                 </div>
-            </form>
-            <?php }
+                <br class="clear">
+            <?php } ?>
+
+            </div>
+        </form>
             
+		<?php             
 		if ($photos)
-		{			
-			if ($total_pages > 1)
-			{
-				echo '<div class="tablenav-pages">';
-				for($i==1;$i<=$total_pages;$i++) {
-					$current = "";	
-					if ($current_page == $i) {
-						echo '<span class="page-numbers'. $current . '">'. $i . '</span>';
-					} else {
-						echo '<a class="page-numbers" href="?post_id=' . $post_id . '&amp;type=image&amp;tab=openphoto&amp;m=' . $m . '&amp;pg='. $i . '">'. $i . '</a>';
-					}
-				}
-				if ($current_page < $total_pages)
-				{
-					echo '<a class="next page-numbers" href="?post_id='. $post_id . '&amp;type=image&amp;tab=openphoto&amp;m=' . $m . '&amp;pg='. ($current_page+1) . '">»</a>';
-				}
-				echo '</div>';
-			}       
+		{
             
 			echo '<form enctype="multipart/form-data" method="post" action="'.home_url().'/wp-admin/media-upload.php?type=image&amp;tab=library&amp;post_id='.$post_id.'" class="media-upload-form validate" id="library-form">';
 			echo '<input type="hidden" id="_wpnonce" name="_wpnonce" value="5acb57476d" /><input type="hidden" name="_wp_http_referer" value="/wp-admin/media-upload.php?post_id='.$post_id.'&amp;type=image&amp;tab=library" />';
