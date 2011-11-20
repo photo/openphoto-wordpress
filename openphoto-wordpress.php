@@ -186,12 +186,12 @@ echo '<p>Images ('. $total_photos . ')</p>';
 					if ($current_page == $i) {
 						echo '<span class="page-numbers'. $current . '">'. $i . '</span>';
 					} else {
-						echo '<a class="page-numbers" href="?post_id=<?php echo $post_id ?>&type=image&tab=openphoto&pg='. $i . '">'. $i . '</a>';
+						echo '<a class="page-numbers" href="?post_id=' . $post_id . '&amp;type=image&amp;tab=openphoto&amp;m=' . $m . '&amp;pg='. $i . '">'. $i . '</a>';
 					}
 				}
 				if ($current_page < $total_pages)
 				{
-					echo '<a class="next page-numbers" href="/wp-admin/media-upload.php?post_id='. $post_id . '&amp;type=image&amp;tab=openphoto&amp;pg='. ($current_page+1) . '">»</a>';
+					echo '<a class="next page-numbers" href="?post_id='. $post_id . '&amp;type=image&amp;tab=openphoto&amp;m=' . $m . '&amp;pg='. ($current_page+1) . '">»</a>';
 				}
 				echo '</div>';
 			}       
