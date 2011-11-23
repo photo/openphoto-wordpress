@@ -42,53 +42,32 @@ class WP_OpenPhoto {
 		$pg = trim($_REQUEST['pg']);
 
 		$openphoto = get_option('openphoto_wordpress_settings');
-
+		$client = new OpenPhotoOAuth(str_replace('http://','',$openphoto['host']),$openphoto["oauth_consumer_key"],$openphoto["oauth_consumer_secret"],$openphoto["oauth_token"],$openphoto["oauth_token_secret"]);
 		
 		// get photos 
-		$curl_get  = '?';
-		$curl_get .= 'oauth_consumer_key=' . $openphoto["oauth_consumer_key"];
-		$curl_get .= '&oauth_consumer_secret=' . $openphoto["oauth_consumer_secret"];
-		$curl_get .= '&oauth_token=' . $openphoto["oauth_token"];
-		$curl_get .= '&oauth_token_secret=' . $openphoto["oauth_token_secret"];
-		$curl_get .= '&returnSizes=32x32,128x128';
-		if(!empty($m)) $curl_get .= '&tags=' . $m;
-		if(!empty($pg)) $curl_get .= '&page=' . $pg;
+		$sizes['thumbnail']['w'] = get_option('thumbnail_size_w');
+		$sizes['thumbnail']['h'] = get_option('thumbnail_size_h');
+		$sizes['thumbnail']['crop'] = get_option('thumbnail_crop');
+		$sizes['thumbnail']      = $sizes['thumbnail']['w'] . 'x' . $sizes['thumbnail']['h'];
+		if ($sizes['thumbnail']['crop']==1) $sizes['thumbnail'] .= 'xCR';
+		$sizes['medium']['w']    = get_option('medium_size_w');
+		$sizes['medium']['h']    = get_option('medium_size_h');
+		$sizes['medium']         = $sizes['medium']['w'] . 'x' . $sizes['medium']['h']; 
+		$sizes['large']['w']     = get_option('large_size_w');
+		$sizes['large']['h']     = get_option('large_size_h');
+		$sizes['large']          = $sizes['large']['w'] . 'x' . $sizes['large']['h'];
 
-//print_r($curl_get); echo '<br><br>';
-				
-		$curl_options = array(
-	  				CURLOPT_HEADER => 0,
-	  				CURLOPT_URL => trailingslashit($openphoto['host']) . 'photos/list.json' . $curl_get,
-	  				CURLOPT_FRESH_CONNECT => 1,
-	  				CURLOPT_RETURNTRANSFER => 1,
-		);
-		$ch = curl_init();
-		curl_setopt_array($ch, $curl_options);
-		$response = curl_exec($ch);
-		curl_close($ch);		
-		$response = json_decode($response); //echo '<pre>' . print_r($response,true) . '</pre>'; die();
+		$parameters['returnSizes'] = '32x32xCR,128x128,'. $sizes['thumbnail'] . ',' . $sizes['medium']  . ',' . $sizes['large'];
+		if(!empty($m)) $parameters['tags'] = $m;
+		if(!empty($pg)) $parameters['page'] = $pg;
+		$response = $client->get("/photos/list.json", $parameters);
+		$response = json_decode($response);
 		$photos = $response->result;
 		
 		// get tags 
-		$curl_get  = '?';
-		$curl_get .= 'oauth_consumer_key=' . $openphoto["oauth_consumer_key"];
-		$curl_get .= '&oauth_consumer_secret=' . $openphoto["oauth_consumer_secret"];
-		$curl_get .= '&oauth_token=' . $openphoto["oauth_token"];
-		$curl_get .= '&oauth_token_secret=' . $openphoto["oauth_token_secret"];		
-		$curl_options = array(
-	  				CURLOPT_HEADER => 0,
-	  				CURLOPT_URL => trailingslashit($openphoto['host']) . 'tags/list.json' . $curl_get,
-	  				CURLOPT_FRESH_CONNECT => 1,
-	  				CURLOPT_RETURNTRANSFER => 1,
-		);
-		$ch = curl_init();
-		curl_setopt_array($ch, $curl_options);
-		$response = curl_exec($ch);
-		curl_close($ch);
+		$response = $client->get("/tags/list.json");
 		$response = json_decode($response);
 		$tags = $response->result;
-		
-		$post_id = $_GET["post_id"];
 		
 		?>
 			<script>
@@ -140,61 +119,75 @@ class WP_OpenPhoto {
 					
 					return false;
 				});
+				// Weird empty page nav item showing. This removes it. Will break the nav once the code is fixed.
+				//jQuery(".page-numbers").not(".next").eq(0).hide();
 			});
 			</script>
-			
-<?php if ($photos) {
-	
-	$total_pages = $photos[0]->totalPages;
-			$current_page = $photos[0]->currentPage;
-			$total_photos = $photos[0]->totalRows;
-			
-echo '<p>Images ('. $total_photos . ')</p>';			        
-        	
-	
-}?>		
-            
-			<?php if ($tags) { ?>
-            <form id="op-filter" action="?post_id=<?php echo $post_id ?>&type=image&tab=openphoto" method="post">
-                <div class="tablenav">
-                    <div class="alignleft actions">
-                        <select name="m">
-                            <option value="0">Show all tags</option>
-                            <?php
-								foreach($tags as $tag) {
-									$tag->id = trim($tag->id);
-									$selected = "";	
-									if ($tag->id==$m) $selected = ' selected="selected"';
-									if ($tag->count > 0) echo '<option value="'.$tag->id .'"' . $selected . '>' . $tag->id . ' (' . $tag->count . ')</option>';
-								}
-                            ?>
-                            </select>
-                        <input type="submit" name="post-query-submit" id="op-post-query-submit" class="button-secondary" value="Filter »">
-                    </div>
-                    <br class="clear">
+
+        <form id="op-filter" action="?post_id=<?php echo $post_id ?>&type=image&tab=openphoto" method="post">
+            <input type="hidden" name="type" value="image">
+            <input type="hidden" name="tab" value="library">
+            <input type="hidden" name="post_id" value="<?php echo $post_id ?>">
+            <input type="hidden" name="post_mime_type" value="">
+            <ul class="subsubsub">
+            <?php if ($photos) {
+                $total_pages = $photos[0]->totalPages;
+                $current_page = $photos[0]->currentPage;
+                $total_photos = $photos[0]->totalRows;
+            echo '<li>Total Images <span class="count">(<span id="image-counter">'. $total_photos . '</span>)</span></li>';	
+            }?>
+            </ul>
+            <div class="tablenav">
+            <?php if ($photos)
+            {			
+                if ($total_pages > 1)
+                {
+                    echo '<div class="tablenav-pages">';
+                    if ($current_page > 1)
+                    {
+                    echo '<a class="next page-numbers" href="?post_id='. $post_id . '&amp;type=image&amp;tab=openphoto&amp;m=' . $m . '&amp;pg='. ($current_page-1) . '">&laquo;</a>';
+                    }
+                    for($i=1;$i<=$total_pages;$i++) {
+                        $current = "";	
+                        if ($current_page == $i) {
+                            $current = ' current ';
+                            echo '<span class="page-numbers'. $current . '">'. $i . '</span>';
+                        } else {
+                            echo '<a class="page-numbers" href="?post_id=' . $post_id . '&amp;type=image&amp;tab=openphoto&amp;m=' . $m . '&amp;pg='. $i . '">'. $i . '</a>';
+                        }
+                    }
+                    if ($current_page < $total_pages)
+                    {
+                        echo '<a class="next page-numbers" href="?post_id='. $post_id . '&amp;type=image&amp;tab=openphoto&amp;m=' . $m . '&amp;pg='. ($current_page+1) . '">&raquo;</a>';
+                    }
+                    echo '</div>';
+                }
+            } ?>
+
+            <?php if ($tags) { ?>
+                <div class="alignleft actions">
+                    <select name="m">
+                        <option value="0">Show all tags</option>
+                        <?php
+                            foreach($tags as $tag) {
+                                $tag->id = trim($tag->id);
+                                $selected = "";	
+                                if ($tag->id==$m) $selected = ' selected="selected"';
+                                if ($tag->count > 0) echo '<option value="'.$tag->id .'"' . $selected . '>' . $tag->id . ' (' . $tag->count . ')</option>';
+                            }
+                        ?>
+                        </select>
+                    <input type="submit" name="post-query-submit" id="op-post-query-submit" class="button-secondary" value="Filter »">
                 </div>
-            </form>
-            <?php }
+                <br class="clear">
+            <?php } ?>
+
+            </div>
+        </form>
             
+		<?php             
 		if ($photos)
-		{			
-			if ($total_pages > 1)
-			{
-				echo '<div class="tablenav-pages">';
-				for($i==1;$i<=$total_pages;$i++) {
-					$current = "";	
-					if ($current_page == $i) {
-						echo '<span class="page-numbers'. $current . '">'. $i . '</span>';
-					} else {
-						echo '<a class="page-numbers" href="?post_id=' . $post_id . '&amp;type=image&amp;tab=openphoto&amp;m=' . $m . '&amp;pg='. $i . '">'. $i . '</a>';
-					}
-				}
-				if ($current_page < $total_pages)
-				{
-					echo '<a class="next page-numbers" href="?post_id='. $post_id . '&amp;type=image&amp;tab=openphoto&amp;m=' . $m . '&amp;pg='. ($current_page+1) . '">»</a>';
-				}
-				echo '</div>';
-			}       
+		{
             
 			echo '<form enctype="multipart/form-data" method="post" action="'.home_url().'/wp-admin/media-upload.php?type=image&amp;tab=library&amp;post_id='.$post_id.'" class="media-upload-form validate" id="library-form">';
 			echo '<input type="hidden" id="_wpnonce" name="_wpnonce" value="5acb57476d" /><input type="hidden" name="_wp_http_referer" value="/wp-admin/media-upload.php?post_id='.$post_id.'&amp;type=image&amp;tab=library" />';
@@ -231,7 +224,7 @@ echo '<p>Images ('. $total_photos . ')</p>';
 					echo '<thead class="media-item-info" id="media-head-'.$unique_id.'">';
 						echo '<tr valign="top">';
 							echo '<td class="A1B1" id="thumbnail-head-'.$unique_id.'">';
-								echo '<p style="height:100px;padding-right:10px;"><a href="'.$post->path128x128.'" target="_blank"><img class="thumbnail" src="'.$photo->path128x128.'" alt="" style="margin-top: 3px;"></a></p>';
+								echo '<p style="height:100px;padding-right:10px;"><a href="'.$post->path32x32xCR.'" target="_blank"><img class="thumbnail" src="'.$photo->path128x128.'" alt="" style="margin-top: 3px;"></a></p>';
 								//echo '<p><input type="button" id="imgedit-open-btn-'.$unique_id.'" onclick="imageEdit.open( '.$unique_id.', &quot;98f2ea4727&quot; )" class="button" value="Edit Image"> <img src="'.home_url().'/wp-admin/images/wpspin_light.gif" class="imgedit-wait-spin" alt=""></p>';
 							echo '</td>';
 							echo '<td>';
@@ -268,7 +261,7 @@ echo '<p>Images ('. $total_photos . ')</p>';
 								echo '<input type="text" class="text urlfield url-text" name="attachments['.$unique_id.'][url]" value="http://'.$photo->host.$photo->pathOriginal.'"><br>';
 								echo '<button type="button" class="button urlnone" title="">None</button>';
 								echo '<button type="button" class="button urlfile" title="http://'.$photo->host.$photo->pathOriginal.'">File URL</button>';
-								//echo '<button type="button" class="button urlpost" title="http://2011.handcraftedwp.com/?attachment_id='.$unique_id.'">Post URL</button>';
+								echo '<button type="button" class="button urlpost" title="http://'.$photo->host . 'photo/'. $photo->id . '/view">OpenPhoto URL</button>';
 								echo '<p class="help">Enter a link URL or click above for presets.</p>';
 							echo '</td>';
 						echo '</tr>';
@@ -284,10 +277,10 @@ echo '<p>Images ('. $total_photos . ')</p>';
 						echo '<tr class="image-size">';
 							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$unique_id.'][image-size]"><span class="alignleft">Size</span><br class="clear"></label></th>';
 							echo '<td class="field size-area">';
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-thumbnail-'.$unique_id.'" value="thumbnail" alt="'.$photo->path32x32.'" checked="checked"><label for="image-size-thumbnail-'.$unique_id.'">Thumbnail</label> <label for="image-size-thumbnail-'.$unique_id.'" class="help">(150&nbsp;×&nbsp;150)</label></div>';
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-medium-'.$unique_id.'" value="medium" alt="'.$photo->path128x128.'"><label for="image-size-medium-'.$unique_id.'">Medium</label> <label for="image-size-medium-'.$unique_id.'" class="help">(300&nbsp;×&nbsp;187)</label></div>';
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-large-'.$unique_id.'" value="large" alt="'.$photo->path32x32.'"><label for="image-size-large-'.$unique_id.'">Large</label> <label for="image-size-large-'.$unique_id.'" class="help">(584&nbsp;×&nbsp;365)</label></div>';
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-full-'.$unique_id.'" value="full" alt="'.$photo->path32x32.'"><label for="image-size-full-'.$unique_id.'">Full Size</label> <label for="image-size-full-'.$unique_id.'" class="help">('.$photo->height.'&nbsp;×&nbsp;'.$photo->width.')</label></div>';
+								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-thumbnail-'.$unique_id.'" value="thumbnail" alt="'.$photo->{"path".$sizes['thumbnail']} . '" checked="checked"><label for="image-size-thumbnail-'.$unique_id.'">Thumbnail</label> <label for="image-size-thumbnail-'.$unique_id.'" class="help">(150&nbsp;×&nbsp;150)</label></div>';
+								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-medium-'.$unique_id.'" value="medium" alt="'.$photo->{"path".$sizes['medium']}.'"><label for="image-size-medium-'.$unique_id.'">Medium</label> <label for="image-size-medium-'.$unique_id.'" class="help">(300&nbsp;×&nbsp;187)</label></div>';
+								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-large-'.$unique_id.'" value="large" alt="'.$photo->{"path".$sizes['large']}.'"><label for="image-size-large-'.$unique_id.'">Large</label> <label for="image-size-large-'.$unique_id.'" class="help">(584&nbsp;×&nbsp;365)</label></div>';
+								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-full-'.$unique_id.'" value="full" alt="'.$photo->pathOriginal.'"><label for="image-size-full-'.$unique_id.'">Full Size</label> <label for="image-size-full-'.$unique_id.'" class="help">('.$photo->height.'&nbsp;×&nbsp;'.$photo->width.')</label></div>';
 							echo '</td>';
 						echo '</tr>';
 				echo '<tr class="submit">';
