@@ -57,7 +57,7 @@ class WP_OpenPhoto {
 		$sizes['large']['h']     = get_option('large_size_h');
 		$sizes['large']          = $sizes['large']['w'] . 'x' . $sizes['large']['h'];
 
-		$parameters['returnSizes'] = '12x12xCR,128x128,'. $sizes['thumbnail'] . ',' . $sizes['medium']  . ',' . $sizes['large'];
+		$parameters['returnSizes'] = '32x32xCR,128x128,'. $sizes['thumbnail'] . ',' . $sizes['medium']  . ',' . $sizes['large'];
 		if(!empty($m)) $parameters['tags'] = $m;
 		if(!empty($pg)) $parameters['page'] = $pg;
 		$response = $client->get("/photos/list.json", $parameters);
