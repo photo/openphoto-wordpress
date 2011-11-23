@@ -57,12 +57,14 @@ class WP_OpenPhoto {
 		$sizes['large']['h']     = get_option('large_size_h');
 		$sizes['large']          = $sizes['large']['w'] . 'x' . $sizes['large']['h'];
 
-		$parameters['returnSizes'] = '32x32xCR,128x128,'. $sizes['thumbnail'] . ',' . $sizes['medium']  . ',' . $sizes['large'];
+		$parameters['returnSizes'] = '12x12xCR,128x128,'. $sizes['thumbnail'] . ',' . $sizes['medium']  . ',' . $sizes['large'];
 		if(!empty($m)) $parameters['tags'] = $m;
 		if(!empty($pg)) $parameters['page'] = $pg;
 		$response = $client->get("/photos/list.json", $parameters);
 		$response = json_decode($response);
 		$photos = $response->result;
+		
+print_r($photos);		
 		
 		// get tags 
 		$response = $client->get("/tags/list.json");
@@ -119,8 +121,6 @@ class WP_OpenPhoto {
 					
 					return false;
 				});
-				// Weird empty page nav item showing. This removes it. Will break the nav once the code is fixed.
-				//jQuery(".page-numbers").not(".next").eq(0).hide();
 			});
 			</script>
 
@@ -300,9 +300,6 @@ class WP_OpenPhoto {
 				echo '</table>';
 				echo '</div>';
 				
-				//if ($photo->path32x32 != "") echo '<img src="' . $photo->path32x32 . '" /> &nbsp;';	
-				//if ($photo->title != "") { echo $photo->title; } else { echo $photo->pathBase; }
-				//print_r($photo);
 			}
 			
 			echo '</div>';
