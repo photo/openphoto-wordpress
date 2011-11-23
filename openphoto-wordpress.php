@@ -64,8 +64,6 @@ class WP_OpenPhoto {
 		$response = json_decode($response);
 		$photos = $response->result;
 		
-print_r($photos);		
-		
 		// get tags 
 		$response = $client->get("/tags/list.json");
 		$response = json_decode($response);
