@@ -143,20 +143,20 @@ class WP_OpenPhoto {
                     echo '<div class="tablenav-pages">';
                     if ($current_page > 1)
                     {
-                    echo '<a class="next page-numbers" href="?post_id='. $post_id . '&amp;type=image&amp;tab=openphoto&amp;m=' . $m . '&amp;pg='. ($current_page-1) . '">&laquo;</a>';
+                    echo '<a class="next page-numbers" href="?post_id='. $post_id . '&amp;type=image&amp;tab=openphoto&amp;m=' . $m . '&amp;pg='. ($current_page-1) . '">&laquo;</a> ';
                     }
                     for($i=1;$i<=$total_pages;$i++) {
                         $current = "";	
                         if ($current_page == $i) {
                             $current = ' current ';
-                            echo '<span class="page-numbers'. $current . '">'. $i . '</span>';
+                            echo '<span class="page-numbers'. $current . '">'. $i . '</span> ';
                         } else {
-                            echo '<a class="page-numbers" href="?post_id=' . $post_id . '&amp;type=image&amp;tab=openphoto&amp;m=' . $m . '&amp;pg='. $i . '">'. $i . '</a>';
+                            echo '<a class="page-numbers" href="?post_id=' . $post_id . '&amp;type=image&amp;tab=openphoto&amp;m=' . $m . '&amp;pg='. $i . '">'. $i . '</a> ';
                         }
                     }
                     if ($current_page < $total_pages)
                     {
-                        echo '<a class="next page-numbers" href="?post_id='. $post_id . '&amp;type=image&amp;tab=openphoto&amp;m=' . $m . '&amp;pg='. ($current_page+1) . '">&raquo;</a>';
+                        echo '<a class="next page-numbers" href="?post_id='. $post_id . '&amp;type=image&amp;tab=openphoto&amp;m=' . $m . '&amp;pg='. ($current_page+1) . '">&raquo;</a> ';
                     }
                     echo '</div>';
                 }
@@ -222,7 +222,7 @@ class WP_OpenPhoto {
 					echo '<thead class="media-item-info" id="media-head-'.$unique_id.'">';
 						echo '<tr valign="top">';
 							echo '<td class="A1B1" id="thumbnail-head-'.$unique_id.'">';
-								echo '<p style="height:100px;padding-right:10px;"><a href="'.$post->path32x32xCR.'" target="_blank"><img class="thumbnail" src="'.$photo->path128x128.'" alt="" style="margin-top: 3px;"></a></p>';
+								echo '<p style="height:100px;padding-right:10px;"><a href="http://'.$photo->host.$photo->pathOriginal.'" target="_blank"><img class="thumbnail" src="'.$photo->path128x128.'" alt="" style="margin-top: 3px;"></a></p>';
 								//echo '<p><input type="button" id="imgedit-open-btn-'.$unique_id.'" onclick="imageEdit.open( '.$unique_id.', &quot;98f2ea4727&quot; )" class="button" value="Edit Image"> <img src="'.home_url().'/wp-admin/images/wpspin_light.gif" class="imgedit-wait-spin" alt=""></p>';
 							echo '</td>';
 							echo '<td>';
