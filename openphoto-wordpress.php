@@ -141,6 +141,7 @@ class WP_OpenPhoto {
             if ( $photos ) {			
                 if ($total_pages > 1) {
                     echo '<div class="tablenav-pages">';
+
                     if ($current_page > 1) {
                     	echo '<a class="next page-numbers" href="?post_id='. $post_id . '&amp;type=image&amp;tab=openphoto&amp;m=' . $m . '&amp;pg='. ($current_page-1) . '">&laquo;</a> ';
                     }
@@ -153,6 +154,7 @@ class WP_OpenPhoto {
                             echo '<a class="page-numbers" href="?post_id=' . $post_id . '&amp;type=image&amp;tab=openphoto&amp;m=' . $m . '&amp;pg='. $i . '">'. $i . '</a> ';
                         }
                     }
+
                     if ($current_page < $total_pages) {
                         echo '<a class="next page-numbers" href="?post_id='. $post_id . '&amp;type=image&amp;tab=openphoto&amp;m=' . $m . '&amp;pg='. ($current_page+1) . '">&raquo;</a> ';
                     }
