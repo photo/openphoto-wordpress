@@ -38,6 +38,7 @@ class WP_OpenPhoto {
 
 		$openphoto = get_option('openphoto_wordpress_settings');
 		$client = new OpenPhotoOAuth(str_replace('http://','',$openphoto['host']),$openphoto["oauth_consumer_key"],$openphoto["oauth_consumer_secret"],$openphoto["oauth_token"],$openphoto["oauth_token_secret"]);
+		$client = new OpenPhotoOAuth(str_replace('http://','',$openphoto['host']));
 		
 		// get photos 
 		$sizes['thumbnail']['w'] = get_option('thumbnail_size_w');
@@ -138,7 +139,7 @@ class WP_OpenPhoto {
             <div class="tablenav">
             <?php
             
-            if ( $photos ) {			
+            if ( $photos ) {	print_r($photos); die();
                 if ($total_pages > 1) {
                     echo '<div class="tablenav-pages">';
 
@@ -172,7 +173,9 @@ class WP_OpenPhoto {
                                 $tag->id = trim($tag->id);
                                 $selected = "";	
                                 if ( $tag->id==$m ) $selected = ' selected="selected"';
-                                if ($tag->count > 0) echo '<option value="'.$tag->id .'"' . $selected . '>' . $tag->id . ' (' . $tag->count . ')</option>';
+                                echo '<option value="'.$tag->id .'"' . $selected . '>' . $tag->id;
+								if ( (int) $tag->count > 1) echo '(' . $tag->count . ')';
+								echo '</option>';
                             }
                         ?>
                         </select>
