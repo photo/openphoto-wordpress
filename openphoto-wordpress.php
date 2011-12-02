@@ -76,11 +76,12 @@ class WP_OpenPhoto {
 					caption_text.replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 					url_text = parent_el.find('.url-text').val();
 					alignment = parent_el.find('.alignment-area input[type="radio"]]:checked').val();
-					size = parent_el.find('.size-area input[type="radio"]]:checked').val();
+					size_height = parent_el.find('.size-area input[type="radio"]]:checked').attr('data-image-height');
+					size_width = parent_el.find('.size-area input[type="radio"]]:checked').attr('data-image-width');
 					size_alt =  parent_el.find('.size-area input[type="radio"]]:checked').attr('alt');
 					size_class = 'size-' + size;
-					height = 100;
-					width = 150;
+					height = size_height;
+					width = size_width;
 					op_single = parent_el.find('#op-single').attr('name');
 					img = '';
 					
@@ -281,14 +282,14 @@ class WP_OpenPhoto {
 							echo '<td class="field size-area">';
 								$thumbnail_width = 150;
 								$thumbnail_height = 150;
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-thumbnail-'.$unique_id.'" value="thumbnail" alt="'.$photo->{"path".$sizes['thumbnail']} . '" checked="checked"><label for="image-size-thumbnail-'.$unique_id.'">Thumbnail</label> <label for="image-size-thumbnail-'.$unique_id.'" class="help">(' . $thumbnail_width. '&nbsp;×&nbsp;' . $thumbnail_height . ')</label></div>';
+								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-thumbnail-'.$unique_id.'" value="thumbnail" alt="'.$photo->{"path".$sizes['thumbnail']} . '" data-image-height="'.$thumbnail_height.'" data-image-width="'.$thumbnail_width.'" checked="checked"><label for="image-size-thumbnail-'.$unique_id.'">Thumbnail</label> <label for="image-size-thumbnail-'.$unique_id.'" class="help">(' . $thumbnail_width. '&nbsp;×&nbsp;' . $thumbnail_height . ')</label></div>';
 								$medium_width = 300;
 								$medium_height = 187;
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-medium-'.$unique_id.'" value="medium" alt="'.$photo->{"path".$sizes['medium']}.'"><label for="image-size-medium-'.$unique_id.'">Medium</label> <label for="image-size-medium-'.$unique_id.'" class="help">(' . $medium_width . '&nbsp;×&nbsp;' . $medium_height . ')</label></div>';
+								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-medium-'.$unique_id.'" value="medium" alt="'.$photo->{"path".$sizes['medium']}.'" data-image-height="'.$medium_height.'" data-image-width="'.$medium_width.'"><label for="image-size-medium-'.$unique_id.'">Medium</label> <label for="image-size-medium-'.$unique_id.'" class="help">(' . $medium_width . '&nbsp;×&nbsp;' . $medium_height . ')</label></div>';
 								$large_width = 600;
 								$large_height = 400;
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-large-'.$unique_id.'" value="large" alt="'.$photo->{"path".$sizes['large']}.'"><label for="image-size-large-'.$unique_id.'">Large</label> <label for="image-size-large-'.$unique_id.'" class="help">('. $large_width . '&nbsp;×&nbsp;'. $large_height . ')</label></div>';
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-full-'.$unique_id.'" value="full" alt="'.$photo->pathOriginal.'"><label for="image-size-full-'.$unique_id.'">Full Size</label> <label for="image-size-full-'.$unique_id.'" class="help">('.$photo->height.'&nbsp;×&nbsp;'.$photo->width.')</label></div>';
+								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-large-'.$unique_id.'" value="large" alt="'.$photo->{"path".$sizes['large']}.'" data-image-height="'.$large_height.'" data-image-width="'.$large_width.'"><label for="image-size-large-'.$unique_id.'">Large</label> <label for="image-size-large-'.$unique_id.'" class="help">('. $large_width . '&nbsp;×&nbsp;'. $large_height . ')</label></div>';
+								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-full-'.$unique_id.'" value="full" alt="'.$photo->pathOriginal.'" data-image-height="'.$photo->height.'" data-image-width="'.$photo->width.'"><label for="image-size-full-'.$unique_id.'">Full Size</label> <label for="image-size-full-'.$unique_id.'" class="help">('.$photo->height.'&nbsp;×&nbsp;'.$photo->width.')</label></div>';
 							echo '</td>';
 						echo '</tr>';
 				echo '<tr class="submit">';
