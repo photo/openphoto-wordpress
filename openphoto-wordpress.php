@@ -281,16 +281,38 @@ class WP_OpenPhoto {
 						echo '<tr class="image-size">';
 							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$unique_id.'][image-size]"><span class="alignleft">Size</span><br class="clear"></label></th>';
 							echo '<td class="field size-area">';
+								$checked = ' checked="checked"';
 								$thumbnail_width = $photo->{"photo".$sizes['thumbnail']}[2];
 								$thumbnail_height = $photo->{"photo".$sizes['thumbnail']}[1];
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-thumbnail-'.$unique_id.'" value="thumbnail" alt="'.$photo->{"photo".$sizes['thumbnail']}[0] . '" data-image-height="'.$thumbnail_height.'" data-image-width="'.$thumbnail_width.'" checked="checked"><label for="image-size-thumbnail-'.$unique_id.'">Thumbnail</label> <label for="image-size-thumbnail-'.$unique_id.'" class="help">(' . $thumbnail_width. '&nbsp;×&nbsp;' . $thumbnail_height . ')</label></div>';
+								echo '<div class="image-size-item">';
+								if ($thumbnail_width < $photo->width || $thumbnail_height < $photo->height) {
+									echo '<input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-thumbnail-'.$unique_id.'" value="thumbnail" alt="'.$photo->{"photo".$sizes['thumbnail']}[0] . '" data-image-height="'.$thumbnail_height.'" data-image-width="'.$thumbnail_width.'"' . $checked . '><label for="image-size-thumbnail-'.$unique_id.'">Thumbnail</label> <label for="image-size-thumbnail-'.$unique_id.'" class="help">(' . $thumbnail_width. '&nbsp;×&nbsp;' . $thumbnail_height . ')</label>';
+									$checked = "";
+								} else {
+									echo '<input type="radio" disabled="disabled" /><label for="image-size-thumbnail-'.$unique_id.'">Thumbnail</label>';								
+								}
+								echo '</div>';								
 								$medium_width = $photo->{"photo".$sizes['medium']}[2];
 								$medium_height = $photo->{"photo".$sizes['medium']}[1];
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-medium-'.$unique_id.'" value="medium" alt="'.$photo->{"photo".$sizes['medium']}[0].'" data-image-height="'.$medium_height.'" data-image-width="'.$medium_width.'"><label for="image-size-medium-'.$unique_id.'">Medium</label> <label for="image-size-medium-'.$unique_id.'" class="help">(' . $medium_width . '&nbsp;×&nbsp;' . $medium_height . ')</label></div>';
+								echo '<div class="image-size-item">';
+								if ($medium_width < $photo->width || $medium_height < $photo->height) {
+									echo '<input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-medium-'.$unique_id.'" value="medium" alt="'.$photo->{"photo".$sizes['medium']}[0].'" data-image-height="'.$medium_height.'" data-image-width="'.$medium_width.'"' . $checked . '><label for="image-size-medium-'.$unique_id.'">Medium</label> <label for="image-size-medium-'.$unique_id.'" class="help">(' . $medium_width . '&nbsp;×&nbsp;' . $medium_height . ')</label>';
+									$checked = "";
+								} else {
+									echo '<input type="radio" disabled="disabled" /><label for="image-size-medium-'.$unique_id.'">Medium</label>';								
+								}
+								echo '</div>';
 								$large_width = $photo->{"photo".$sizes['large']}[2];
 								$large_height = $photo->{"photo".$sizes['large']}[1];
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-large-'.$unique_id.'" value="large" alt="'.$photo->{"photo".$sizes['large']}[0].'" data-image-height="'.$large_height.'" data-image-width="'.$large_width.'"><label for="image-size-large-'.$unique_id.'">Large</label> <label for="image-size-large-'.$unique_id.'" class="help">('. $large_width . '&nbsp;×&nbsp;'. $large_height . ')</label></div>';
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-full-'.$unique_id.'" value="full" alt="'.$photo->pathOriginal.'" data-image-height="'.$photo->height.'" data-image-width="'.$photo->width.'"><label for="image-size-full-'.$unique_id.'">Full Size</label> <label for="image-size-full-'.$unique_id.'" class="help">('.$photo->height.'&nbsp;×&nbsp;'.$photo->width.')</label></div>';
+								echo '<div class="image-size-item">';								
+								if ($large_width < $photo->width || $large_height < $photo->height) {
+									echo '<input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-large-'.$unique_id.'" value="large" alt="'.$photo->{"photo".$sizes['large']}[0].'" data-image-height="'.$large_height.'" data-image-width="'.$large_width.'"' . $checked . '><label for="image-size-large-'.$unique_id.'">Large</label> <label for="image-size-large-'.$unique_id.'" class="help">('. $large_width . '&nbsp;×&nbsp;'. $large_height . ')</label>';
+									$checked = "";
+								} else {
+									echo '<input type="radio" disabled="disabled" /><label for="image-size-large-'.$unique_id.'">Large</label>';
+								}
+								echo '</div>';
+								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-full-'.$unique_id.'" value="full" alt="'.$photo->pathOriginal.'" data-image-height="'.$photo->height.'" data-image-width="'.$photo->width.'"' . $checked . '><label for="image-size-full-'.$unique_id.'">Full Size</label> <label for="image-size-full-'.$unique_id.'" class="help">('.$photo->height.'&nbsp;×&nbsp;'.$photo->width.')</label></div>';
 							echo '</td>';
 						echo '</tr>';
 				echo '<tr class="submit">';
