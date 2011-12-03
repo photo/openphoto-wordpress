@@ -107,7 +107,7 @@ class WP_OpenPhoto {
 						aligment = '';
 					}
 					
-					img += '<a href="'+size_alt+'" id="'+op_single+'"><img class="'+alignment + ' ' + size_class + ' ' + '" title="' + title_text + '" src="' + size_alt + '" alt="' + alt_text + '" width="' + width + '" height="' + height + '" /></a>';
+					img += '<a href="'+url_text+'" id="'+op_single+'"><img class="'+alignment + ' ' + size_class + ' ' + '" title="' + title_text + '" src="' + size_alt + '" alt="' + alt_text + '" width="' + width + '" height="' + height + '" /></a>';
 					
 					if (caption_text != "") {
 						img += '[/caption]';
