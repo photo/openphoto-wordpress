@@ -68,6 +68,7 @@ class WP_OpenPhoto {
 		?>
 			<script>
 			jQuery(document).ready(function() {
+				
 				jQuery('.op-send-to-editor').click(function() {
 					var parent_el, title_text, alt_text, caption_text, url_text, alignment, size, size_alt, op_single, img;
 					parent_el = jQuery(this).parents('tbody');
@@ -85,6 +86,61 @@ class WP_OpenPhoto {
 					width = size_width;
 					op_single = parent_el.find('#op-single').attr('name');
 					img = '';
+
+					
+var userSettings = {'url':'<?php echo SITECOOKIEPATH; ?>','uid':'<?php if ( ! isset($current_user) ) $current_user = wp_get_current_user(); echo $current_user->ID; ?>','time':'<?php echo time(); ?>'};
+
+var user_ID = <?php if ( ! isset($current_user) ) $current_user = wp_get_current_user(); echo $current_user->ID; ?>;
+
+var user_cookie = getCookie('wp-settings-' + user_ID);
+
+function getCookie(opCookieName) {
+	var i,x,y,ARRcookies=document.cookie.split(";");
+	for (i=0;i<ARRcookies.length;i++) {
+		x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+		y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+		x=x.replace(/^\s+|\s+$/g,"");
+		if (x==opCookieName)
+		{
+			return unescape(y);
+		}
+	}
+}
+
+function setCookie(opCookieName,opCookieValue,nDays) {
+	var today = new Date();
+	var expire = new Date();
+	if (nDays==null || nDays==0) nDays=1;
+	expire.setTime(today.getTime() + 3600000*24*nDays);
+	document.cookie = opCookieName+"="+escape(opCookieValue) + ";expires="+expire.toGMTString();
+}
+
+function checkCookie() {
+	var findOPMediaCookie=getCookie(user_cookie);
+	//if (findOPMediaCookie!=null && findOPMediaCookie!="") {
+	//	alert(findOPMediaCookie);
+	//}
+	//else {
+		var opMediaAlignment = alignment;
+		opMediaAlignment += ':' + 'test';
+		setCookie(user_cookie,opMediaAlignment,365);
+	//}
+}
+checkCookie();
+
+function breakCookie(content){
+	var separated_values = content.split("&");
+	var urlbutton = separated_values[0].split("=");
+	var editor = (separated_values[1].split("=");
+	var imgsize = (separated_values[2].split("=");
+	var align = (separated_values[3].split("=");
+	
+	
+	
+}
+breakCookie(user_cookie);
+
+
 					
 					if (alt_text === "") {
 						alt_text = title_text;
@@ -107,7 +163,7 @@ class WP_OpenPhoto {
 						aligment = '';
 					}
 					
-					img += '<a href="'+size_alt+'" id="'+op_single+'"><img class="'+alignment + ' ' + size_class + ' ' + '" title="' + title_text + '" src="' + size_alt + '" alt="' + alt_text + '" width="' + width + '" height="' + height + '" /></a>';
+					img += '<a href="'+url_text+'" id="'+op_single+'"><img class="'+alignment + ' ' + size_class + ' ' + '" title="' + title_text + '" src="' + size_alt + '" alt="' + alt_text + '" width="' + width + '" height="' + height + '" /></a>';
 					
 					if (caption_text != "") {
 						img += '[/caption]';
