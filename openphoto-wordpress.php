@@ -68,6 +68,11 @@ class WP_OpenPhoto {
 		?>
 			<script>
 			jQuery(document).ready(function() {
+				var url_button_type;
+				jQuery(".url button").click(function() {
+					url_button_type = jQuery(this).html();
+				});
+				
 				jQuery('.op-send-to-editor').click(function() {
 					var parent_el, title_text, alt_text, caption_text, url_text, alignment, size, size_alt, op_single, img;
 					parent_el = jQuery(this).parents('tbody');
@@ -77,6 +82,7 @@ class WP_OpenPhoto {
 					caption_text.replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 					url_text = parent_el.find('.url-text').val();
 					alignment = parent_el.find('.alignment-area input[type="radio"]]:checked').val();
+					size = parent_el.find('.size-area input[type="radio"]]:checked').val();
 					size_height = parent_el.find('.size-area input[type="radio"]]:checked').attr('data-image-height');
 					size_width = parent_el.find('.size-area input[type="radio"]]:checked').attr('data-image-width');
 					size_alt =  parent_el.find('.size-area input[type="radio"]]:checked').attr('alt');
@@ -85,7 +91,7 @@ class WP_OpenPhoto {
 					width = size_width;
 					op_single = parent_el.find('#op-single').attr('name');
 					img = '';
-					
+										
 					if (alt_text === "") {
 						alt_text = title_text;
 					}
