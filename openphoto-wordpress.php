@@ -191,7 +191,7 @@ class WP_OpenPhoto {
         </form>
             
 		<?php             
-		if ( $photos ) {
+		if ( $photos ) { 
             
 			echo '<form enctype="multipart/form-data" method="post" action="'.home_url().'/wp-admin/media-upload.php?type=image&amp;tab=library&amp;post_id='.$post_id.'" class="media-upload-form validate" id="library-form">';
 			echo '<input type="hidden" id="_wpnonce" name="_wpnonce" value="5acb57476d" /><input type="hidden" name="_wp_http_referer" value="/wp-admin/media-upload.php?post_id='.$post_id.'&amp;type=image&amp;tab=library" />';
@@ -230,7 +230,7 @@ class WP_OpenPhoto {
 					echo '<thead class="media-item-info" id="media-head-'.$unique_id.'">';
 						echo '<tr valign="top">';
 							echo '<td class="A1B1" id="thumbnail-head-'.$unique_id.'">';
-								echo '<p style="height:100px;padding-right:10px;"><a href="http://'.$photo->host.$photo->pathOriginal.'" target="_blank"><img class="thumbnail" src="'.$photo->path128x128.'" alt="" style="margin-top: 3px;"></a></p>';
+								echo '<p style="height:100px;padding-right:10px;"><a href="http://'.$photo->appId.$photo->pathOriginal.'" target="_blank"><img class="thumbnail" src="'.$photo->path128x128.'" alt="" style="margin-top: 3px;"></a></p>';
 								//echo '<p><input type="button" id="imgedit-open-btn-'.$unique_id.'" onclick="imageEdit.open( '.$unique_id.', &quot;98f2ea4727&quot; )" class="button" value="Edit Image"> <img src="'.home_url().'/wp-admin/images/wpspin_light.gif" class="imgedit-wait-spin" alt=""></p>';
 							echo '</td>';
 							echo '<td>';
@@ -267,7 +267,7 @@ class WP_OpenPhoto {
 								echo '<input type="text" class="text urlfield url-text" name="attachments['.$unique_id.'][url]" value="http://'.$photo->host.$photo->pathOriginal.'"><br>';
 								echo '<button type="button" class="button urlnone" title="">None</button>';
 								echo '<button type="button" class="button urlfile" title="http://'.$photo->host.$photo->pathOriginal.'">File URL</button>';
-								echo '<button type="button" class="button urlpost" title="http://'.$photo->appId. 'photo/'. $photo->id . '/view">OpenPhoto URL</button>';
+								echo '<button type="button" class="button urlpost" title="http://'.$photo->appId. '/photo/'. $photo->id . '/view">OpenPhoto URL</button>';
 								echo '<p class="help">Enter a link URL or click above for presets.</p>';
 							echo '</td>';
 						echo '</tr>';
@@ -284,8 +284,8 @@ class WP_OpenPhoto {
 							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$unique_id.'][image-size]"><span class="alignleft">Size</span><br class="clear"></label></th>';
 							echo '<td class="field size-area">';
 								$checked = ' checked="checked"';
-								$thumbnail_width = $photo->{"photo".$sizes['thumbnail']}[2];
-								$thumbnail_height = $photo->{"photo".$sizes['thumbnail']}[1];
+								$thumbnail_width = $photo->{"photo".$sizes['thumbnail']}[1];
+								$thumbnail_height = $photo->{"photo".$sizes['thumbnail']}[2];
 								echo '<div class="image-size-item">';
 								if ($thumbnail_width < $photo->width || $thumbnail_height < $photo->height) {
 									echo '<input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-thumbnail-'.$unique_id.'" value="thumbnail" alt="'.$photo->{"photo".$sizes['thumbnail']}[0] . '" data-image-height="'.$thumbnail_height.'" data-image-width="'.$thumbnail_width.'"' . $checked . '><label for="image-size-thumbnail-'.$unique_id.'">Thumbnail</label> <label for="image-size-thumbnail-'.$unique_id.'" class="help">(' . $thumbnail_width. '&nbsp;×&nbsp;' . $thumbnail_height . ')</label>';
@@ -294,8 +294,8 @@ class WP_OpenPhoto {
 									echo '<input type="radio" disabled="disabled" /><label for="image-size-thumbnail-'.$unique_id.'">Thumbnail</label>';								
 								}
 								echo '</div>';								
-								$medium_width = $photo->{"photo".$sizes['medium']}[2];
-								$medium_height = $photo->{"photo".$sizes['medium']}[1];
+								$medium_width = $photo->{"photo".$sizes['medium']}[1];
+								$medium_height = $photo->{"photo".$sizes['medium']}[2];
 								echo '<div class="image-size-item">';
 								if ($medium_width < $photo->width || $medium_height < $photo->height) {
 									echo '<input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-medium-'.$unique_id.'" value="medium" alt="'.$photo->{"photo".$sizes['medium']}[0].'" data-image-height="'.$medium_height.'" data-image-width="'.$medium_width.'"' . $checked . '><label for="image-size-medium-'.$unique_id.'">Medium</label> <label for="image-size-medium-'.$unique_id.'" class="help">(' . $medium_width . '&nbsp;×&nbsp;' . $medium_height . ')</label>';
@@ -304,8 +304,8 @@ class WP_OpenPhoto {
 									echo '<input type="radio" disabled="disabled" /><label for="image-size-medium-'.$unique_id.'">Medium</label>';								
 								}
 								echo '</div>';
-								$large_width = $photo->{"photo".$sizes['large']}[2];
-								$large_height = $photo->{"photo".$sizes['large']}[1];
+								$large_width = $photo->{"photo".$sizes['large']}[1];
+								$large_height = $photo->{"photo".$sizes['large']}[2];
 								echo '<div class="image-size-item">';								
 								if ($large_width < $photo->width || $large_height < $photo->height) {
 									echo '<input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-large-'.$unique_id.'" value="large" alt="'.$photo->{"photo".$sizes['large']}[0].'" data-image-height="'.$large_height.'" data-image-width="'.$large_width.'"' . $checked . '><label for="image-size-large-'.$unique_id.'">Large</label> <label for="image-size-large-'.$unique_id.'" class="help">('. $large_width . '&nbsp;×&nbsp;'. $large_height . ')</label>';
@@ -314,7 +314,7 @@ class WP_OpenPhoto {
 									echo '<input type="radio" disabled="disabled" /><label for="image-size-large-'.$unique_id.'">Large</label>';
 								}
 								echo '</div>';
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-full-'.$unique_id.'" value="full" alt="'.$photo->pathOriginal.'" data-image-height="'.$photo->height.'" data-image-width="'.$photo->width.'"' . $checked . '><label for="image-size-full-'.$unique_id.'">Full Size</label> <label for="image-size-full-'.$unique_id.'" class="help">('.$photo->height.'&nbsp;×&nbsp;'.$photo->width.')</label></div>';
+								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-full-'.$unique_id.'" value="full" alt="http://'.$photo->host.$photo->pathOriginal.'" data-image-height="'.$photo->height.'" data-image-width="'.$photo->width.'"' . $checked . '><label for="image-size-full-'.$unique_id.'">Full Size</label> <label for="image-size-full-'.$unique_id.'" class="help">('.$photo->width.'&nbsp;×&nbsp;'.$photo->height.')</label></div>';
 							echo '</td>';
 						echo '</tr>';
 				echo '<tr class="submit">';
@@ -398,7 +398,7 @@ class WP_OpenPhoto_Settings {
 			update_option('openphoto_wordpress_settings',$openphoto);
 
 			if ($host_changed || empty( $openphoto['oauth_token'] ) || empty( $openphoto['oauth_token_secret'] ) ) {
-				wp_redirect(trailingslashit(esc_attr($openphoto['host'])) . 'v1/oauth/authorize?oauth_callback=' . urlencode(admin_url("options-general.php?page=openphoto_wordpress_settings&action=authenticate")) . '&name=' . urlencode('OpenPhoto WordPress Plugin ' . ereg_replace("(https?)://", "", get_bloginfo('url')) . ''));
+				wp_redirect(trailingslashit(esc_attr($openphoto['host'])) . 'v1/oauth/authorize?oauth_callback=' . urlencode(admin_url("options-general.php?page=openphoto_wordpress_settings&action=authenticate")) . '&name=' . urlencode('OpenPhoto WordPress Plugin (' . ereg_replace("(https?)://", "", get_bloginfo('url')) . ')'));
 			} else {
 				wp_redirect('options-general.php?page=openphoto_wordpress_settings&message=1');
 			}
