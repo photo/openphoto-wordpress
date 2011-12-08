@@ -68,10 +68,6 @@ class WP_OpenPhoto {
 		?>
 			<script>
 			jQuery(document).ready(function() {
-				var url_button_type;
-				jQuery(".url button").click(function() {
-					url_button_type = jQuery(this).html();
-				});
 				
 				jQuery('.op-send-to-editor').click(function() {
 					var parent_el, title_text, alt_text, caption_text, url_text, alignment, size, size_alt, op_single, img;
@@ -91,7 +87,7 @@ class WP_OpenPhoto {
 					width = size_width;
 					op_single = parent_el.find('#op-single').attr('name');
 					img = '';
-										
+
 					if (alt_text === "") {
 						alt_text = title_text;
 					}
