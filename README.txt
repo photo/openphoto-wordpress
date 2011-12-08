@@ -1,9 +1,9 @@
 === Plugin Name ===
-Contributors: randyhoyt,randyjensen
+Contributors: randyjensen,randyhoyt
 Tags: openphoto,media
 Requires at least: 3.2
 Tested up to: 3.3
-Stable tag: 0.1
+Stable tag: 0.9
 
 Insert photos from your OpenPhoto installation into your WordPress content through the media manager.
 
@@ -11,45 +11,20 @@ Insert photos from your OpenPhoto installation into your WordPress content throu
 
 Insert photos from your OpenPhoto installation into your WordPress content through the media manager.
 
-== Installation ==
+Learn more about [OpenPhoto](http://theopenphotoproject.org/ "OpenPhoto")
 
-1. Unzip this plugin and upload the `openphoto-wordpress` folder to your `/wp-content/plugins/` directory.
-2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Browse to Settings > OpenPhoto.
-4. Specify the web address of your OpenPhoto installation. Save the settings to authenticate with your OpenPhoto installation's API.
-
-== Frequently Asked Questions ==
-
-We don't have any === Plugin Name ===
-Contributors: randyhoyt,randyjensen
-Tags: openphoto,media
-Requires at least: 3.2
-Tested up to: 3.3
-Stable tag: 0.1
-
-Insert photos from your OpenPhoto installation into your WordPress content through the media manager.
-
-== Description ==
-
-Insert photos from your OpenPhoto installation into your WordPress content through the media manager.
+Find the project on [GitHub](https://github.com/openphoto/openphoto-wordpress "OpenPhoto Github")
 
 == Installation ==
 
-1. Unzip this plugin and upload the `openphoto-wordpress` folder to your `/wp-content/plugins/` directory.
-2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Browse to Settings > OpenPhoto.
-4. Specify the web address of your OpenPhoto installation. Save the settings to authenticate with your OpenPhoto installation's API.
+1. Install plugin like any other WordPress plugin
+2. Browse to Settings > OpenPhoto.
+3. Specify the web address of your OpenPhoto installation. Save the settings to authenticate with your OpenPhoto installation's API.
+4. Now when you add an image through WordPress, you'll see a new tab called "OpenPhoto".
 
 == Frequently Asked Questions ==
 
-None yet. 
-
 == Changelog ==
 
-= 0.1 =
-* Initial release
-
-== Changelog ==
-
-= 0.1 =
+= 0.9 =
 * Initial release
