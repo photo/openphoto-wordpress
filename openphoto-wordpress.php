@@ -198,13 +198,9 @@ class WP_OpenPhoto {
 			-->
 			</script>';
 			echo '<div id="media-items">';
-		
-			foreach( $photos as $photo ) {
-			
-				//echo '<pre>' . print_r($photos,true) . '</pre>'; die();
 
-				$unique_id = intval($photo->dateUploaded);
-				
+			foreach( $photos as $unique_id => $photo ) {
+							
 				echo '<div id="media-item-'.$unique_id.'" class="media-item child-of-'.$post_id.' preloaded"><div class="progress" style="display: none; "></div><div id="media-upload-error-'.$unique_id.'"></div><div class="filename"></div>';
 				echo '<input type="hidden" id="type-of-'.$unique_id.'" value="image">';
 				echo '<a class="toggle describe-toggle-on" href="#">Show</a>';
