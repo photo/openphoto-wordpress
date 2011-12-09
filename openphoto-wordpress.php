@@ -486,7 +486,7 @@ class WP_OpenPhoto_Settings {
 				break;
 		}		
 		
-		echo '<form action="?page=openphoto_wordpress_settings" method="post" id="openphoto_wordpress_settings_form">';
+		echo '<form action="?page=openphoto_wordpress_settings&noheader=true" method="post" id="openphoto_wordpress_settings_form">';
 		echo '<input type="hidden" id="_wpnonce" name="_wpnonce" value="' .  wp_create_nonce('openphoto_wordpress_settings') . '" />';		
 		echo '<input type="hidden" name="action" value="update" />';		
 		echo '<table class="form-table">';
