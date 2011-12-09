@@ -64,7 +64,6 @@ class WP_OpenPhoto {
 		$response = $client->get("/tags/list.json");
 		$response = json_decode($response);
 		$tags = $response->result;
-		
 		?>
 			<script>
 			jQuery(document).ready(function() {
@@ -130,7 +129,6 @@ class WP_OpenPhoto {
             <input type="hidden" name="post_mime_type" value="">
             <ul class="subsubsub">
             <?php
-            
             if ( $photos ) {
                 $total_pages = $photos[0]->totalPages;
                 $current_page = $photos[0]->currentPage;
@@ -141,7 +139,6 @@ class WP_OpenPhoto {
             ?></ul>
             <div class="tablenav">
             <?php
-            
             if ( $photos ) {			
                 if ($total_pages > 1) {
                     echo '<div class="tablenav-pages">';
@@ -167,7 +164,6 @@ class WP_OpenPhoto {
             }
             
             if ( $tags ) {
-            	
 			?><div class="alignleft actions">
                     <select name="m">
                         <option value="0">Show all tags</option>
@@ -183,13 +179,8 @@ class WP_OpenPhoto {
                     <input type="submit" name="post-query-submit" id="op-post-query-submit" class="button-secondary" value="Filter »">
                 </div>
                 <br class="clear">
-            <?php
-            
-			}
-			
-			?></div>
+            <?php } ?></div>
         </form>
-            
 		<?php             
 		if ( $photos ) { 
             
@@ -389,7 +380,7 @@ class WP_OpenPhoto_Settings {
 			$newinput['oauth_token'] = trim($input['oauth_token']);		
 			$newinput['oauth_token_secret'] = trim($input['oauth_token_secret']);		
 			$newinput['oauth_verifier'] = trim($input['oauth_verifier']);
-			
+
 			if ( $newinput['host'] != $openphoto['host'] ) {
 				$host_changed = true;
 			}			
@@ -451,6 +442,8 @@ class WP_OpenPhoto_Settings {
 					
 					if ($result['response']['code'] == 200) {
 						$access = wp_parse_args($result['body']);
+						$openphoto['oauth_consumer_key'] = $_REQUEST["oauth_consumer_key"];
+						$openphoto['oauth_consumer_secret'] = $_REQUEST["oauth_consumer_secret"];
 						$openphoto['oauth_token'] = $access['oauth_token'];
 						$openphoto['oauth_token_secret'] = $access['oauth_token_secret'];
 						
