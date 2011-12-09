@@ -234,7 +234,7 @@ class WP_OpenPhoto {
 						echo '<tr><td style="display:none" colspan="2" class="image-editor" id="image-editor-'.$unique_id.'"></td></tr>';
 						echo '<tr class="post_title form-required">';
 							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$unique_id.'][post_title]"><span class="alignleft">Title</span><span class="alignright"><abbr title="required" class="required">*</abbr></span><br class="clear"></label></th>';
-							echo '<td class="field"><input type="text" class="text title-text" id="attachments['.$unique_id.'][post_title]" name="attachments['.$unique_id.'][post_title]" value="'.substr(strrchr($photo->pathOriginal, "/"), 1 ).'" aria-required="true"></td>';
+							echo '<td class="field"><input type="text" class="text title-text" id="attachments['.$unique_id.'][post_title]" name="attachments['.$unique_id.'][post_title]" value="'.basename($photo->pathOriginal).'" aria-required="true"></td>';
 						echo '</tr>';
 						echo '<tr class="image_alt">';
 							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$unique_id.'][image_alt]"><span class="alignleft">Alternate Text</span><br class="clear"></label></th>';
@@ -254,7 +254,7 @@ class WP_OpenPhoto {
 								echo '<input type="text" class="text urlfield url-text" name="attachments['.$unique_id.'][url]" value="http://'.$photo->host.$photo->pathOriginal.'"><br>';
 								echo '<button type="button" class="button urlnone" title="">None</button>';
 								echo '<button type="button" class="button urlfile" title="http://'.$photo->host.$photo->pathOriginal.'">File URL</button>';
-								echo '<button type="button" class="button urlpost" title="http://'.$photo->appId. '/photo/'. $photo->id . '/view">OpenPhoto URL</button>';
+								echo '<button type="button" class="button urlpost" title="'.$photo->url.'">OpenPhoto URL</button>';
 								echo '<p class="help">Enter a link URL or click above for presets.</p>';
 							echo '</td>';
 						echo '</tr>';
