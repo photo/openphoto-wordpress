@@ -385,7 +385,7 @@ class WP_OpenPhoto_Settings {
 			update_option('openphoto_wordpress_settings',$openphoto);
 
 			if ($host_changed || empty( $openphoto['oauth_token'] ) || empty( $openphoto['oauth_token_secret'] ) ) {
-				wp_redirect(trailingslashit(esc_attr($openphoto['host'])) . 'v1/oauth/authorize?oauth_callback=' . urlencode(admin_url("options-general.php?page=openphoto_wordpress_settings&action=authenticate")) . '&name=' . urlencode('OpenPhoto WordPress Plugin (' . ereg_replace("(https?)://", "", get_bloginfo('url')) . ')'));
+				wp_redirect(trailingslashit(esc_attr($openphoto['host'])) . 'v1/oauth/authorize?oauth_callback=' . urlencode(admin_url("options-general.php?page=openphoto_wordpress_settings&action=authenticate&noheader=true")) . '&name=' . urlencode('OpenPhoto WordPress Plugin (' . ereg_replace("(https?)://", "", get_bloginfo('url')) . ')'));
 			} else {
 				wp_redirect('options-general.php?page=openphoto_wordpress_settings&message=1');
 			}
