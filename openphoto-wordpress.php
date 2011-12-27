@@ -198,8 +198,17 @@ class WP_OpenPhoto {
 			-->
 			</script>';
 			echo '<div id="media-items">';
+			
+			$size_for_image_url_link = $openphoto['size'];
+			if ($size_for_image_url_link == "") $size_for_image_url_link = "original";					
 
 			foreach( $photos as $unique_id => $photo ) {
+					
+				$src = array();
+				$src["thumbnail"] = $photo->{"photo".$sizes['thumbnail']}[0];
+				$src["medium"] = $photo->{"photo".$sizes['medium']}[0];
+				$src["large"] = $photo->{"photo".$sizes['large']}[0];
+				$src["original"] = 'http://'.$photo->host.$photo->pathOriginal;				
 							
 				echo '<div id="media-item-'.$unique_id.'" class="media-item child-of-'.$post_id.' preloaded"><div class="progress" style="display: none; "></div><div id="media-upload-error-'.$unique_id.'"></div><div class="filename"></div>';
 				echo '<input type="hidden" id="type-of-'.$unique_id.'" value="image">';
@@ -251,9 +260,9 @@ class WP_OpenPhoto {
 						echo '<tr class="url">';
 							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$unique_id.'][url]"><span class="alignleft">Link URL</span><br class="clear"></label></th>';
 							echo '<td class="field">';
-								echo '<input type="text" class="text urlfield url-text" name="attachments['.$unique_id.'][url]" value="http://'.$photo->host.$photo->pathOriginal.'"><br>';
+								echo '<input type="text" class="text urlfield url-text" name="attachments['.$unique_id.'][url]" value="'.$src[$size_for_image_url_link].'"><br>';
 								echo '<button type="button" class="button urlnone" title="">None</button>';
-								echo '<button type="button" class="button urlfile" title="http://'.$photo->host.$photo->pathOriginal.'">File URL</button>';
+								echo '<button type="button" class="button urlfile" title="'.$src[$size_for_image_url_link].'">File URL</button>';
 								echo '<button type="button" class="button urlpost" title="'.$photo->url.'">OpenPhoto URL</button>';
 								echo '<p class="help">Enter a link URL or click above for presets.</p>';
 							echo '</td>';
@@ -369,6 +378,7 @@ class WP_OpenPhoto_Settings {
 			
 			$input = $_REQUEST['openphoto_wordpress_settings'];
 			$newinput['host'] = trim($input['host']);
+			$newinput['size'] = trim($input['size']);			
 			$newinput['oauth_consumer_key'] = trim($input['oauth_consumer_key']);
 			$newinput['oauth_consumer_secret'] = trim($input['oauth_consumer_secret']);		
 			$newinput['unauthorized_token'] = trim($input['unauthorized_token']);		
@@ -481,6 +491,19 @@ class WP_OpenPhoto_Settings {
 		echo '<table class="form-table">';
 		echo '<tr valign="top"><th scope="row">Host</th><td><input id="openphoto_wordpress_settings_host" name="openphoto_wordpress_settings[host]" size="100" type="text" value="' . esc_attr($openphoto['host']) . '" />';
 		echo '<p class="description"><em>Enter the web address of the home page of your OpenPhoto installation.</em></p></td></tr>';
+		echo '<tr valign="top"><th scope="row">Size for Links</th><td><select id="openphoto_wordpress_settings_size" name="openphoto_wordpress_settings[size]">';
+		$sizes = array();
+		$sizes[0] = 'Original';
+		$sizes[1] = 'Thumbnail';
+		$sizes[2] = 'Medium';
+		$sizes[3] = 'Large';
+		foreach ($sizes as $size) {
+			$selected = '';	
+			if (strtolower($size)==$openphoto['size']) $selected = ' selected="selected"';
+			echo '<option value="' . strtolower($size) . '"' . $selected . '>' . $size . '</option>';
+		}
+		echo 'type="text" value="' . esc_attr($openphoto['size']) . '" />';
+		echo '</select><p class="description"><em>Select which size of the image the File URL link should reference when an image is inserted into a post.</em></p></td></tr>';
 		echo '<tr style="display: none;" valign="top"><th scope="row">Consumer Key</th><td><input id="openphoto_wordpress_settings_oauth_consumer_key" name="openphoto_wordpress_settings[oauth_consumer_key]" size="40" type="text" value="' . esc_attr($openphoto['oauth_consumer_key']) . '" /></td></tr>';
 		echo '<tr style="display: none;" valign="top"><th scope="row">Consumer Secret</th><td><input id="openphoto_wordpress_settings_oauth_consumer_secret" name="openphoto_wordpress_settings[oauth_consumer_secret]" size="40" type="text" value="' . esc_attr($openphoto['oauth_consumer_secret']) . '" /></td></tr>';
 		echo '<tr style="display: none;" valign="top"><th scope="row">Token</th><td><input id="openphoto_wordpress_settings_oauth_token" name="openphoto_wordpress_settings[oauth_token]" size="40" type="text" value="' . esc_attr($openphoto['oauth_token']) . '" /></td></tr>';
@@ -498,6 +521,7 @@ class WP_OpenPhoto_Settings {
 	function settings_validate_submission( $input ) {
 		
 		$newinput['host'] = trim($input['host']);
+		$newinput['size'] = trim($input['size']);
 		$newinput['oauth_consumer_key'] = trim($input['oauth_consumer_key']);
 		$newinput['oauth_consumer_secret'] = trim($input['oauth_consumer_secret']);		
 		$newinput['unauthorized_token'] = trim($input['unauthorized_token']);		
