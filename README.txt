@@ -26,6 +26,10 @@ Find the project on [GitHub](https://github.com/openphoto/openphoto-wordpress "O
 
 == Changelog ==
 
+= 0.9.X =
+* Force image sizes to be generated so image src will persist.
+* Add option for image size referenced by the File URL button.     
+
 = 0.9.2 =
 * Minor fixes to address header redirects, the OAuth workflow, and non-unique ids
 
