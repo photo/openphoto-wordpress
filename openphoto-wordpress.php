@@ -208,7 +208,12 @@ class WP_OpenPhoto {
 				$src["thumbnail"] = $photo->{"photo".$sizes['thumbnail']}[0];
 				$src["medium"] = $photo->{"photo".$sizes['medium']}[0];
 				$src["large"] = $photo->{"photo".$sizes['large']}[0];
-				$src["original"] = 'http://'.$photo->host.$photo->pathOriginal;				
+				$src["original"] = 'http://'.$photo->host.$photo->pathOriginal;	
+
+				if ("" == $photo->title) {
+					$info = pathinfo($photo->pathOriginal);
+					$photo->title = basename($photo->pathOriginal,'.'.$info['extension']);
+				}				
 							
 				echo '<div id="media-item-'.$unique_id.'" class="media-item child-of-'.$post_id.' preloaded"><div class="progress" style="display: none; "></div><div id="media-upload-error-'.$unique_id.'"></div><div class="filename"></div>';
 				echo '<input type="hidden" id="type-of-'.$unique_id.'" value="image">';
@@ -216,11 +221,7 @@ class WP_OpenPhoto {
 				echo '<a class="toggle describe-toggle-off" href="#">Hide</a>';
 				echo '<input type="hidden" name="attachments['.$unique_id.'][menu_order]" value="0">';
 				echo '<div class="filename new"><span class="title">';
-				if (! empty($photo->title) ) {
-					echo $photo->title;
-				} else {
-					substr(strrchr($photo->pathOriginal, "/"), 1 );
-				}
+				echo esc_attr($photo->title);
 				echo '</span></div>';
 				echo '<table class="slidetoggle describe startclosed">';
 					echo '<thead class="media-item-info" id="media-head-'.$unique_id.'">';
@@ -242,8 +243,8 @@ class WP_OpenPhoto {
 						echo '<tr><td colspan="2" class="imgedit-response" id="imgedit-response-'.$unique_id.'"></td></tr>';
 						echo '<tr><td style="display:none" colspan="2" class="image-editor" id="image-editor-'.$unique_id.'"></td></tr>';
 						echo '<tr class="post_title form-required">';
-							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$unique_id.'][post_title]"><span class="alignleft">Title</span><span class="alignright"><abbr title="required" class="required">*</abbr></span><br class="clear"></label></th>';
-							echo '<td class="field"><input type="text" class="text title-text" id="attachments['.$unique_id.'][post_title]" name="attachments['.$unique_id.'][post_title]" value="'.basename($photo->pathOriginal).'" aria-required="true"></td>';
+							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$unique_id.'][post_title]"><span class="alignleft">Title</span><span class="alignright"><abbr title="required" class="required">*</abbr></span><br class="clear"></label></th>'; 
+							echo '<td class="field"><input type="text" class="text title-text" id="attachments['.$unique_id.'][post_title]" name="attachments['.$unique_id.'][post_title]" value="'.$photo->title.'" aria-required="true"></td>';
 						echo '</tr>';
 						echo '<tr class="image_alt">';
 							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$unique_id.'][image_alt]"><span class="alignleft">Alternate Text</span><br class="clear"></label></th>';

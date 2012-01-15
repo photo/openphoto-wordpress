@@ -28,6 +28,7 @@ Find the project on [GitHub](https://github.com/openphoto/openphoto-wordpress "O
 
 = 0.9.X =
 * Including openphoto-php as a Git submodule
+* Use title from OpenPhoto instead of filename
 
 = 0.9.3 =
 * Force image sizes to be generated so image src will persist.
