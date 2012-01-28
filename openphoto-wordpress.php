@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: OpenPhoto for WordPress
-Version: 0.9.3
+Version: 0.9.4
 Plugin URI: https://github.com/openphoto/openphoto-wordpress
 Author: Randy Hoyt, Randy Jensen
 Author URI: http://cultivatr.com/
@@ -208,7 +208,16 @@ class WP_OpenPhoto {
 				$src["thumbnail"] = $photo->{"photo".$sizes['thumbnail']}[0];
 				$src["medium"] = $photo->{"photo".$sizes['medium']}[0];
 				$src["large"] = $photo->{"photo".$sizes['large']}[0];
-				$src["original"] = 'http://'.$photo->host.$photo->pathOriginal;				
+				$src["original"] = $photo->pathOriginal;
+				if (strpos($src["original"],"http")===false) $src["original"] = 'http://'.$photo->host.$photo->pathOriginal; // in older versions of the API, pathOriginal did not have the full address
+
+									
+	
+
+				if ("" == $photo->title) {							
+					$info = pathinfo(basename($src["original"]));
+					$photo->title = basename($src["original"],'.'.$info['extension']);
+				}				
 							
 				echo '<div id="media-item-'.$unique_id.'" class="media-item child-of-'.$post_id.' preloaded"><div class="progress" style="display: none; "></div><div id="media-upload-error-'.$unique_id.'"></div><div class="filename"></div>';
 				echo '<input type="hidden" id="type-of-'.$unique_id.'" value="image">';
@@ -216,22 +225,18 @@ class WP_OpenPhoto {
 				echo '<a class="toggle describe-toggle-off" href="#">Hide</a>';
 				echo '<input type="hidden" name="attachments['.$unique_id.'][menu_order]" value="0">';
 				echo '<div class="filename new"><span class="title">';
-				if (! empty($photo->title) ) {
-					echo $photo->title;
-				} else {
-					substr(strrchr($photo->pathOriginal, "/"), 1 );
-				}
+				echo esc_attr($photo->title);
 				echo '</span></div>';
 				echo '<table class="slidetoggle describe startclosed">';
 					echo '<thead class="media-item-info" id="media-head-'.$unique_id.'">';
 						echo '<tr valign="top">';
 							echo '<td class="A1B1" id="thumbnail-head-'.$unique_id.'">';
-								echo '<p style="height:100px;padding-right:10px;"><a href="http://'.$photo->appId.$photo->pathOriginal.'" target="_blank"><img class="thumbnail" src="'.$photo->path128x128.'" alt="" style="margin-top: 3px;"></a></p>';
+								echo '<p style="height:100px;padding-right:10px;"><a href="'.$src["original"].'" target="_blank"><img class="thumbnail" src="'.$photo->path128x128.'" alt="" style="margin-top: 3px;"></a></p>';
 								//echo '<p><input type="button" id="imgedit-open-btn-'.$unique_id.'" onclick="imageEdit.open( '.$unique_id.', &quot;98f2ea4727&quot; )" class="button" value="Edit Image"> <img src="'.home_url().'/wp-admin/images/wpspin_light.gif" class="imgedit-wait-spin" alt=""></p>';
 							echo '</td>';
 							echo '<td>';
-								echo '<p><strong>File name:</strong> '.substr(strrchr($photo->pathOriginal, "/"), 1 ).'</p>';
-								echo '<p><strong>File type:</strong> .'.substr(strrchr($photo->pathOriginal, "."), 1 ).'</p>';
+								echo '<p><strong>File name:</strong> '.$src["original"].'</p>';
+								echo '<p><strong>File type:</strong> .'.$src["original"].'</p>';
 								echo '<p><strong>Upload date:</strong> '.date('F d Y', (int) $photo->dateUploaded).'</p>';
 								echo '<p><strong>Dimensions:</strong> <span id="media-dims-'.$unique_id.'">'.$photo->width.'&nbsp;×&nbsp;'.$photo->height.'</span> </p>';
 							echo '</td>';
@@ -242,8 +247,8 @@ class WP_OpenPhoto {
 						echo '<tr><td colspan="2" class="imgedit-response" id="imgedit-response-'.$unique_id.'"></td></tr>';
 						echo '<tr><td style="display:none" colspan="2" class="image-editor" id="image-editor-'.$unique_id.'"></td></tr>';
 						echo '<tr class="post_title form-required">';
-							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$unique_id.'][post_title]"><span class="alignleft">Title</span><span class="alignright"><abbr title="required" class="required">*</abbr></span><br class="clear"></label></th>';
-							echo '<td class="field"><input type="text" class="text title-text" id="attachments['.$unique_id.'][post_title]" name="attachments['.$unique_id.'][post_title]" value="'.basename($photo->pathOriginal).'" aria-required="true"></td>';
+							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$unique_id.'][post_title]"><span class="alignleft">Title</span><span class="alignright"><abbr title="required" class="required">*</abbr></span><br class="clear"></label></th>'; 
+							echo '<td class="field"><input type="text" class="text title-text" id="attachments['.$unique_id.'][post_title]" name="attachments['.$unique_id.'][post_title]" value="'.$photo->title.'" aria-required="true"></td>';
 						echo '</tr>';
 						echo '<tr class="image_alt">';
 							echo '<th valign="top" scope="row" class="label"><label for="attachments['.$unique_id.'][image_alt]"><span class="alignleft">Alternate Text</span><br class="clear"></label></th>';
@@ -310,7 +315,7 @@ class WP_OpenPhoto {
 									echo '<input type="radio" disabled="disabled" /><label for="image-size-large-'.$unique_id.'">Large</label>';
 								}
 								echo '</div>';
-								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-full-'.$unique_id.'" value="full" alt="http://'.$photo->host.$photo->pathOriginal.'" data-image-height="'.$photo->height.'" data-image-width="'.$photo->width.'"' . $checked . '><label for="image-size-full-'.$unique_id.'">Full Size</label> <label for="image-size-full-'.$unique_id.'" class="help">('.$photo->width.'&nbsp;×&nbsp;'.$photo->height.')</label></div>';
+								echo '<div class="image-size-item"><input type="radio" name="attachments['.$unique_id.'][image-size]" id="image-size-full-'.$unique_id.'" value="full" alt="'.$src["original"].'" data-image-height="'.$photo->height.'" data-image-width="'.$photo->width.'"' . $checked . '><label for="image-size-full-'.$unique_id.'">Full Size</label> <label for="image-size-full-'.$unique_id.'" class="help">('.$photo->width.'&nbsp;×&nbsp;'.$photo->height.')</label></div>';
 							echo '</td>';
 						echo '</tr>';
 				echo '<tr class="submit">';

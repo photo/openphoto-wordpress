@@ -3,7 +3,7 @@ Contributors: randyjensen,randyhoyt
 Tags: openphoto,media
 Requires at least: 3.2
 Tested up to: 3.3
-Stable tag: 0.9.3
+Stable tag: 0.9.4
 
 Insert photos from your OpenPhoto installation into your WordPress content through the media manager.
 
@@ -25,6 +25,11 @@ Find the project on [GitHub](https://github.com/openphoto/openphoto-wordpress "O
 == Frequently Asked Questions ==
 
 == Changelog ==
+
+= 0.9.4 =
+* Including openphoto-php as a Git submodule
+* Use title from OpenPhoto instead of filename
+* Handle change in OpenPhoto API related to value of pathOriginal
 
 = 0.9.3 =
 * Force image sizes to be generated so image src will persist.
