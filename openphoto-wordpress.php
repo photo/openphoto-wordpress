@@ -211,13 +211,9 @@ class WP_OpenPhoto {
 				$src["original"] = $photo->pathOriginal;
 				if (strpos($src["original"],"http")===false) $src["original"] = 'http://'.$photo->host.$photo->pathOriginal; // in older versions of the API, pathOriginal did not have the full address
 
-									
-	
-
-				if ("" == $photo->title) {							
-					$info = pathinfo(basename($src["original"]));
-					$photo->title = basename($src["original"],'.'.$info['extension']);
-				}				
+				$info = pathinfo(basename($src["original"]));
+				$photo->extension = $info['extension'];
+				if ("" == $photo->title) {$photo->title = basename($src["original"],'.'.$photo->extension);}				
 							
 				echo '<div id="media-item-'.$unique_id.'" class="media-item child-of-'.$post_id.' preloaded"><div class="progress" style="display: none; "></div><div id="media-upload-error-'.$unique_id.'"></div><div class="filename"></div>';
 				echo '<input type="hidden" id="type-of-'.$unique_id.'" value="image">';
@@ -235,8 +231,8 @@ class WP_OpenPhoto {
 								//echo '<p><input type="button" id="imgedit-open-btn-'.$unique_id.'" onclick="imageEdit.open( '.$unique_id.', &quot;98f2ea4727&quot; )" class="button" value="Edit Image"> <img src="'.home_url().'/wp-admin/images/wpspin_light.gif" class="imgedit-wait-spin" alt=""></p>';
 							echo '</td>';
 							echo '<td>';
-								echo '<p><strong>File name:</strong> '.$src["original"].'</p>';
-								echo '<p><strong>File type:</strong> .'.$src["original"].'</p>';
+								echo '<p><strong>File name:</strong> '.$photo->title.'</p>';
+								echo '<p><strong>File type:</strong> '.$photo->extension.'</p>';
 								echo '<p><strong>Upload date:</strong> '.date('F d Y', (int) $photo->dateUploaded).'</p>';
 								echo '<p><strong>Dimensions:</strong> <span id="media-dims-'.$unique_id.'">'.$photo->width.'&nbsp;×&nbsp;'.$photo->height.'</span> </p>';
 							echo '</td>';
