@@ -55,7 +55,7 @@ class WP_OpenPhoto {
 		$parameters['returnSizes'] = '32x32xCR,128x128,'. $sizes['thumbnail'] . ',' . $sizes['medium']  . ',' . $sizes['large'];
 		if(!empty($m)) $parameters['tags'] = $m;
 		if(!empty($pg)) $parameters['page'] = $pg;
-		$parameters['generated'] = 'true';
+		$parameters['generate'] = 'true';
 		$response = $client->get("/photos/list.json", $parameters);
 		$response = json_decode($response);
 		$photos = $response->result;
