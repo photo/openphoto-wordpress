@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: OpenPhoto for WordPress
-Version: 0.9.4
+Version: 0.9.4.1
 Plugin URI: https://github.com/openphoto/openphoto-wordpress
 Author: Randy Hoyt, Randy Jensen
 Author URI: http://cultivatr.com/
@@ -56,6 +56,7 @@ class WP_OpenPhoto {
 		if(!empty($m)) $parameters['tags'] = $m;
 		if(!empty($pg)) $parameters['page'] = $pg;
 		$parameters['generate'] = 'true';
+		$parameters['generated'] = 'true';
 		$response = $client->get("/photos/list.json", $parameters);
 		$response = json_decode($response);
 		$photos = $response->result;
