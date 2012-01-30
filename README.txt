@@ -27,7 +27,7 @@ Find the project on [GitHub](https://github.com/openphoto/openphoto-wordpress "O
 == Changelog ==
 
 = 0.9.4.2 =
-* Change values for File Name and File Type
+* Reverting parameter name to "generate" 
 
 = 0.9.4.1 =
 * Change values for File Name and File Type
