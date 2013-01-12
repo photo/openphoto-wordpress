@@ -3,7 +3,7 @@ Contributors: randyjensen,randyhoyt
 Tags: openphoto,media
 Requires at least: 3.2
 Tested up to: 3.5
-Stable tag: 0.9.5%VERSION_NUMBER%
+Stable tag: %VERSION_NUMBER%
 
 Insert photos from your OpenPhoto installation into your WordPress content through the media manager.
 
