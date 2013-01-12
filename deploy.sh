@@ -23,11 +23,11 @@ read NEWVERSION
 
 # Update version number, tag the version, push everything to master.
 echo "Tagging new version in Git."
-CURRENTVERSION=`grep "^Stable tag:" $GITPATH/readme.txt | awk -F' ' '{print $NF}'`
-sed -c -i 's/Stable tag: '$CURRENTVERSION'/Stable tag: '${NEWVERSION}'/g' ${GITPATH}/readme.txt
+CURRENTVERSION=`grep "^Stable tag:" $GITPATH/REAMDE.txt | awk -F' ' '{print $NF}'`
+sed -c -i 's/Stable tag: '$CURRENTVERSION'/Stable tag: '${NEWVERSION}'/g' ${GITPATH}/README.txt
 CURRENTVERSION=`grep "^Version:" $GITPATH/$MAINFILE | awk -F' ' '{print $NF}'`
 sed -c -i 's/Version: '$CURRENTVERSION'/Version: '${NEWVERSION}'/g' ${GITPATH}/${MAINFILE}
-git add readme.txt
+git add README.txt
 git add ${GITPATH}/${MAINFILE}
 git commit -m "Tagging version $NEWVERSION"
 git tag -a "$NEWVERSION" -m "Tagging version $NEWVERSION"
@@ -67,11 +67,11 @@ svn commit --username=$SVNUSER -m "Committing version $NEWVERSIONTXT"
 
 
 cd $GITPATH
-NEWVERSION=`grep "^Stable tag:" $GITPATH/readme.txt | awk -F' ' '{print $NF}'`
-sed -c -i 's/Stable tag: '$NEWVERSION'/Stable tag: %VERSION_NUMBER%/g' ${GITPATH}/readme.txt
+NEWVERSION=`grep "^Stable tag:" $GITPATH/README.txt | awk -F' ' '{print $NF}'`
+sed -c -i 's/Stable tag: '$NEWVERSION'/Stable tag: %VERSION_NUMBER%/g' ${GITPATH}/README.txt
 NEWVERSION=`grep "^Version:" $GITPATH/$MAINFILE | awk -F' ' '{print $NF}'`
 sed -c -i 's/Version: '$NEWVERSION'/Version: %VERSION_NUMBER%/g' ${GITPATH}/${MAINFILE}
-git add readme.txt
+git add README.txt
 git add ${GITPATH}/${MAINFILE}
 git commit -m "Tagging version $NEWVERSION"
 git push
