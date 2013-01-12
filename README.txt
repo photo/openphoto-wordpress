@@ -2,8 +2,8 @@
 Contributors: randyjensen,randyhoyt
 Tags: openphoto,media
 Requires at least: 3.2
-Tested up to: 3.3
-Stable tag: 0.9.4.2
+Tested up to: 3.5
+Stable tag: %VERSION_NUMBER%
 
 Insert photos from your OpenPhoto installation into your WordPress content through the media manager.
 
@@ -25,6 +25,9 @@ Find the project on [GitHub](https://github.com/openphoto/openphoto-wordpress "O
 == Frequently Asked Questions ==
 
 == Changelog ==
+
+= 0.9.5 =
+* Fix Insert Into Post button in WP 3.5
 
 = 0.9.4.2 =
 * Reverting parameter name to "generate" 
