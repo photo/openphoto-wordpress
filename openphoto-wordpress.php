@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: OpenPhoto for WordPress
-Version: %VERSION_NUMBER%
+Version: 0.9.5
 Plugin URI: https://github.com/openphoto/openphoto-wordpress
 Author: Randy Hoyt, Randy Jensen
 Author URI: http://amesburyweb.com/
