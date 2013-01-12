@@ -49,7 +49,7 @@ class WP_OpenPhoto {
 		$sizes['thumbnail']['h'] = get_option('thumbnail_size_h');
 		$sizes['thumbnail']['crop'] = get_option('thumbnail_crop');
 		$sizes['thumbnail']      = $sizes['thumbnail']['w'] . 'x' . $sizes['thumbnail']['h'];
-		if ($sizes['thumbnail']['crop']==1) $sizes['thumbnail'] .= 'xCR';
+		if (isset($sizes['thumbnail']['crop']) && $sizes['thumbnail']['crop']==1) $sizes['thumbnail'] .= 'xCR';
 		$sizes['medium']['w']    = get_option('medium_size_w');
 		$sizes['medium']['h']    = get_option('medium_size_h');
 		$sizes['medium']         = $sizes['medium']['w'] . 'x' . $sizes['medium']['h']; 

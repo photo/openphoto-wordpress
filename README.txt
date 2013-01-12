@@ -27,7 +27,7 @@ Find the project on [GitHub](https://github.com/openphoto/openphoto-wordpress "O
 == Changelog ==
 
 = 0.9.5 =
-* Fix for WordPress 3.5
+* Fix Insert Into Post button in WP 3.5
 
 = 0.9.4.2 =
 * Reverting parameter name to "generate" 
