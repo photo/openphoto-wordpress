@@ -4,7 +4,7 @@
 
 #### Installation
 
-To install this plugin just drag the openphoto-wordpress folder into your `wp-content/plugins` directory.
+To install this plugin just drag the openphoto-wordphp folder and the file openphoto-wordpress.php into your `wp-content/plugins` directory.
 
 #### Connecting WordPress to OpenPhoto
 
