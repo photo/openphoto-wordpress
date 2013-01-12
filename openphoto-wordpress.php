@@ -61,7 +61,7 @@ class WP_OpenPhoto {
 		if(!empty($m)) $parameters['tags'] = $m;
 		if(!empty($pg)) $parameters['page'] = $pg;
 		$parameters['generate'] = 'true';
-		$parameters['generated'] = 'true';
+		$parameters['generated'] = 'true'; // TODO: This parameter should not be needed and can be removed.
 		$response = $client->get("/photos/list.json", $parameters);
 		$response = json_decode($response);
 		$photos = $response->result;
