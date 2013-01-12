@@ -1,10 +1,10 @@
 <?php
 /*
 Plugin Name: OpenPhoto for WordPress
-Version: 0.9.4.2
+Version: %VERSION_NUMBER%
 Plugin URI: https://github.com/openphoto/openphoto-wordpress
 Author: Randy Hoyt, Randy Jensen
-Author URI: http://cultivatr.com/
+Author URI: http://amesburyweb.com/
 Description: Connects a WordPress installation to an OpenPhoto installation.  
 */
 
@@ -30,7 +30,12 @@ class WP_OpenPhoto {
 	}	
 	
 	function media_render_openphoto_tab() {
-		media_upload_header();
+    	
+    	if ( $wp_version >= 3.5 ) {
+        	// do nothing
+        } else {
+    		media_upload_header();
+        }
 		
 		$post_id = intval($_REQUEST['post_id']);
 		$m = trim($_REQUEST['m']);
@@ -77,11 +82,11 @@ class WP_OpenPhoto {
 					caption_text = parent_el.find('.caption-text').val();
 					caption_text.replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 					url_text = parent_el.find('.url-text').val();
-					alignment = parent_el.find('.alignment-area input[type="radio"]]:checked').val();
-					size = parent_el.find('.size-area input[type="radio"]]:checked').val();
-					size_height = parent_el.find('.size-area input[type="radio"]]:checked').attr('data-image-height');
-					size_width = parent_el.find('.size-area input[type="radio"]]:checked').attr('data-image-width');
-					size_alt =  parent_el.find('.size-area input[type="radio"]]:checked').attr('alt');
+					alignment = parent_el.find('.alignment-area input[type="radio"]:checked').val();
+					size = parent_el.find('.size-area input[type="radio"]:checked').val();
+					size_height = parent_el.find('.size-area input[type="radio"]:checked').attr('data-image-height');
+					size_width = parent_el.find('.size-area input[type="radio"]:checked').attr('data-image-width');
+					size_alt =  parent_el.find('.size-area input[type="radio"]:checked').attr('alt');
 					size_class = 'size-' + size;
 					height = size_height;
 					width = size_width;
