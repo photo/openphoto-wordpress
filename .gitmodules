@@ -1,2 +1,5 @@
 
 
+[submodule "openphoto-php"]
+	path = openphoto-php
+	url = https://github.com/photo/openphoto-php.git
