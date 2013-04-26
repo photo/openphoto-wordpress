@@ -40,7 +40,7 @@ class OpenPhotoOAuth
           'path' => $this->constructEndpoint($endpoint),
           'version' => '1.0a',
           'parameters' => $params,
-          'signatures' => 
+          'signatures' =>
             array(
               'consumer_key' => $this->consumerKey,
               'consumer_secret' => $this->consumerSecret,
@@ -96,7 +96,7 @@ class OpenPhotoOAuth
           'path' => $this->constructEndpoint($endpoint),
           'version' => '1.0a',
           'parameters' => $params,
-          'signatures' => 
+          'signatures' =>
             array(
               'consumer_key' => $this->consumerKey,
               'consumer_secret' => $this->consumerSecret,
@@ -121,13 +121,13 @@ class OpenPhotoOAuth
     if($includeConsumerKey)
     {
       if(stristr($endpoint, '?') === false)
-        return sprintf('http://%s%s?oauth_consumer_key=%s', $this->host, $endpoint, $this->consumerKey);
+        return sprintf('%s%s?oauth_consumer_key=%s', $this->host, $endpoint, $this->consumerKey);
       else
-        return sprintf('http://%s%s&oauth_consumer_key=%s', $this->host, $endpoint, $this->consumerKey);
+        return sprintf('%s%s&oauth_consumer_key=%s', $this->host, $endpoint, $this->consumerKey);
     }
     else
     {
-      return sprintf('http://%s%s', $this->host, $endpoint);
+      return sprintf('%s%s', $this->host, $endpoint);
     }
   }
 }
